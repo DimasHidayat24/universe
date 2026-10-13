@@ -1,0 +1,6 @@
+{
+  "name": "Our Little Universe",
+  "description": "A little website for the person who means the world to me — an intimate, editorial digital love letter and anniversary keepsake.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
