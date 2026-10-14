@@ -11,7 +11,7 @@ interface EditorialPhotoProps {
   delay?: number;
 }
 
-/** A quiet photograph on dusk: hairline frame, deep shadow, gentle fade-in. */
+/** A soft white-card photograph: rounded frame, airy shadow, gentle fade-in. */
 export const EditorialPhoto: React.FC<EditorialPhotoProps> = ({
   src,
   alt,
@@ -37,8 +37,8 @@ export const EditorialPhoto: React.FC<EditorialPhotoProps> = ({
       transition={{ duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] }}
       className="w-full"
     >
-      <div className="p-1.5 sm:p-2 border border-[#F4ECE3]/15 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.8)]">
-        <div className={`relative w-full overflow-hidden bg-[#1C1824] ${aspectClass}`}>
+      <div className="p-2 sm:p-2.5 rounded-3xl bg-white border border-[#1C1B19]/6 shadow-[0_30px_60px_-34px_rgba(40,70,110,0.4)]">
+        <div className={`relative w-full overflow-hidden rounded-[1.1rem] bg-[#EEF3F8] ${aspectClass}`}>
           {!showFallback ? (
             <img
               src={src}
@@ -52,7 +52,7 @@ export const EditorialPhoto: React.FC<EditorialPhotoProps> = ({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center p-8 text-center">
-              <span className="font-italic-serif text-lg text-[#A99E99]">
+              <span className="font-italic-serif text-lg text-[#6E6A64]">
                 {placeholderLabel}
               </span>
             </div>
@@ -60,7 +60,7 @@ export const EditorialPhoto: React.FC<EditorialPhotoProps> = ({
         </div>
       </div>
       {caption && (
-        <figcaption className="mt-4 text-center font-italic-serif text-base text-[#A99E99]">
+        <figcaption className="mt-4 text-center font-italic-serif text-base text-[#6E6A64]">
           {caption}
         </figcaption>
       )}

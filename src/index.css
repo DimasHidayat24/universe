@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   "Di Atas Awan" — inspired by an above-the-clouds private aviation look.
-   Dusk sky, deep night ink, cream text, champagne + rose accents.
+   "Langit Siang" — bright daylight sky fading into warm cream.
+   Soft white cards, ink text, sky-blue + soft rose accents, black pill buttons.
    Fonts unchanged: Libre Caslon Condensed, Instrument Serif italic, Lato.
    ============================================================================ */
 
@@ -11,19 +11,19 @@
   --font-italic: "Instrument Serif", Georgia, serif;
   --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --color-night: #14121A;     /* page background */
-  --color-dusk: #1C1824;      /* raised panels */
-  --color-cream: #F4ECE3;     /* main text */
-  --color-haze: #A99E99;      /* secondary text */
-  --color-champagne: #D9B98C; /* gold accent */
-  --color-rose: #E0A08B;      /* warm accent */
+  --color-cream: #FAF8F2;     /* page background */
+  --color-ink: #1C1B19;       /* main text */
+  --color-muted: #6E6A64;     /* secondary text */
+  --color-soft: #8C8780;      /* italic accents */
+  --color-sky: #5B8FC7;       /* blue accent */
+  --color-rose: #D98C7A;      /* warm accent */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #14121A;
-    color: #F4ECE3;
+    background-color: #FAF8F2;
+    color: #1C1B19;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -40,16 +40,16 @@
   }
 
   ::selection {
-    background-color: rgba(217, 185, 140, 0.35);
-    color: #F4ECE3;
+    background-color: rgba(91, 143, 199, 0.22);
+    color: #1C1B19;
   }
 }
 
 @layer components {
-  /* Frosted dark panel (music pill, nav once scrolled) */
+  /* Frosted light panel (music pill) */
   .glass-orbit {
-    background: rgba(20, 18, 26, 0.55);
-    border: 1px solid rgba(244, 236, 227, 0.14);
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(28, 27, 25, 0.08);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
   }
@@ -59,7 +59,7 @@
     font-style: italic;
   }
 
-  .hairline { border-color: rgba(244, 236, 227, 0.12); }
+  .hairline { border-color: rgba(28, 27, 25, 0.09); }
 
   /* Slow drifting cloud wisps */
   .drift-a { animation: drift 70s linear infinite alternate; }
