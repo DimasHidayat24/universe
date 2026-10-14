@@ -281,7 +281,11 @@ export default function App() {
             <Ornament />
             <p className="mt-10 font-italic-serif text-2xl sm:text-3xl">Always a little more, every day.</p>
             <p className="mt-10 text-[11px] uppercase tracking-[0.3em] text-[#7A6C64]">With all my love,</p>
-            <p className="mt-3 font-serif text-3xl">{config.yourName}</p>
+            {config.yourName ? (
+              <p className="mt-3 font-serif text-3xl">{config.yourName}</p>
+            ) : (
+              <p className="mt-3 text-[#B0634F] text-xl" aria-hidden="true">♡</p>
+            )}
 
             <div className="mt-16">
               <button
