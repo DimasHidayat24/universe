@@ -47,15 +47,6 @@ const Kicker: React.FC<{ n: string; label: string; className?: string }> = ({ n,
   </div>
 );
 
-function daysUntilAnniversary(iso: string) {
-  const [, m, d] = iso.split('-').map(Number);
-  const now = new Date();
-  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  let next = Date.UTC(now.getFullYear(), m - 1, d);
-  if (next < today) next = Date.UTC(now.getFullYear() + 1, m - 1, d);
-  return Math.round((next - today) / 86400000);
-}
-
 function daysTogether(iso: string) {
   const start = new Date(`${iso}T00:00:00+07:00`).getTime();
   return Math.max(0, Math.floor((Date.now() - start) / 86400000));
@@ -69,7 +60,6 @@ export default function App() {
   const [showOneLastThing, setShowOneLastThing] = useState(false);
   const [activeMsg, setActiveMsg] = useState(0);
   const [days] = useState(() => daysTogether(config.startDateISO));
-  const [anniv] = useState(() => daysUntilAnniversary(config.startDateISO));
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, restDelta: 0.001 });
@@ -193,14 +183,6 @@ export default function App() {
               <p className="mt-8 max-w-md mx-auto text-base sm:text-lg leading-relaxed text-white font-normal drop-shadow-[0_1px_12px_rgba(28,60,100,0.6)]">
                 A little place for everything I sometimes find difficult to say.
               </p>
-            </Reveal>
-            <Reveal delay={0.3}>
-              <div className="mt-10 inline-flex items-center gap-3 rounded-full bg-white/20 backdrop-blur-md border border-white/40 px-5 py-2.5 text-[12px] sm:text-[13px] tracking-[0.08em] text-white shadow-[0_10px_30px_-12px_rgba(28,60,100,0.6)]">
-                <span className="h-2 w-2 rounded-full bg-[#F6D5CB] animate-pulse" aria-hidden="true" />
-                <span>Hari ke-{(days + 1).toLocaleString('id-ID')} bersama</span>
-                <span className="text-white/60" aria-hidden="true">·</span>
-                <span>{anniv === 0 ? 'Hari ini anniversary kita ♡' : `${anniv} hari lagi anniversary`}</span>
-              </div>
             </Reveal>
           </motion.div>
 
