@@ -1,60 +1,37 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   "Senja di Luar Angkasa" — a plum-indigo night sky with a coral/peach sunset
-   horizon glowing behind the curved edge of a planet.
+   "Hangat & Tenang" — minimalist, elegant, warm.
+   Ivory paper, ink text, one rose-terracotta accent, lots of air.
    ============================================================================ */
 
 @theme {
   --font-serif: "Libre Caslon Condensed", "Instrument Serif", Georgia, serif;
+  --font-italic: "Instrument Serif", Georgia, serif;
   --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --color-plum: #1A1030;   /* Plum Night — background */
-  --color-orbit: #2B1B4A;  /* Deep Orbit — cards / haze */
-  --color-coral: #FF8A6B;  /* Sunset Coral — signature accent */
-  --color-peach: #FFC9A3;  /* Peach Glow — horizon glow */
-  --color-lilac: #B9A3E3;  /* Lilac Dust — stars / nebula */
-  --color-cream: #F7EEE3;  /* Moon Cream — text */
-
-  --animate-twinkle: twinkle 4s ease-in-out infinite;
-  --animate-drift: drift 9s ease-in-out infinite;
-  --animate-comet: comet 9s cubic-bezier(0.55, 0.06, 0.3, 1) infinite;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.25; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.1); }
-}
-
-@keyframes drift {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg)); }
-  50% { transform: translate3d(0, -14px, 0) rotate(calc(var(--tilt, 0deg) + 1.2deg)); }
-}
-
-@keyframes comet {
-  0% { transform: translate3d(0, 0, 0); opacity: 0; }
-  5% { opacity: 1; }
-  20% { opacity: 1; }
-  28%, 100% { transform: translate3d(-110vw, 0, 0); opacity: 0; }
+  --color-ivory: #FBF7F2;  /* background */
+  --color-linen: #F4ECE3;  /* soft section */
+  --color-ink: #2B2320;    /* text */
+  --color-muted: #7A6C64;  /* secondary text */
+  --color-rose: #B0634F;   /* single warm accent */
+  --color-blush: #EAD6CB;  /* soft accent fill */
+  --color-line: #E5D9CD;   /* hairlines */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #1A1030;
-    color: #F7EEE3;
+    background-color: #FBF7F2;
+    color: #2B2320;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -63,118 +40,22 @@
   }
 
   ::selection {
-    background-color: #FF8A6B;
-    color: #1A1030;
+    background-color: #EAD6CB;
+    color: #2B2320;
   }
 }
 
 @layer components {
-  /* Subtle cinematic grain, now tinted for the night sky */
-  .film-grain {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
-  }
-
-  /* Faint lilac nebula haze used behind sections */
-  .nebula-haze {
-    background:
-      radial-gradient(40rem 26rem at 12% 18%, rgba(185, 163, 227, 0.10), transparent 70%),
-      radial-gradient(34rem 22rem at 88% 42%, rgba(255, 138, 107, 0.06), transparent 70%),
-      radial-gradient(46rem 30rem at 50% 100%, rgba(43, 27, 74, 0.9), transparent 75%);
-  }
-
-  /* Static tiled micro-starfield (cheap, no JS) for long sections */
-  .star-dust {
-    background-image:
-      radial-gradient(1px 1px at 20px 30px, rgba(247, 238, 227, 0.55), transparent 60%),
-      radial-gradient(1px 1px at 140px 90px, rgba(185, 163, 227, 0.7), transparent 60%),
-      radial-gradient(1.5px 1.5px at 260px 160px, rgba(255, 201, 163, 0.55), transparent 60%),
-      radial-gradient(1px 1px at 80px 220px, rgba(185, 163, 227, 0.5), transparent 60%),
-      radial-gradient(1px 1px at 330px 40px, rgba(247, 238, 227, 0.35), transparent 60%),
-      radial-gradient(1.2px 1.2px at 200px 280px, rgba(185, 163, 227, 0.45), transparent 60%);
-    background-size: 360px 320px;
-  }
-
-  /* Sunset horizon behind a planet's curved edge */
-  .planet-horizon {
-    background:
-      radial-gradient(110% 80% at 50% 100%, rgba(255, 201, 163, 0.7) 0%, rgba(255, 138, 107, 0.5) 24%, rgba(122, 52, 92, 0.3) 46%, transparent 70%);
-  }
-
-  .planet-body {
-    background: radial-gradient(closest-side, #120a22 0%, #150c28 70%, #1d1236 100%);
-    box-shadow:
-      0 -2px 0 0 rgba(255, 201, 163, 0.85),
-      0 -10px 40px 4px rgba(255, 138, 107, 0.55),
-      0 -40px 120px 30px rgba(255, 138, 107, 0.25),
-      inset 0 18px 60px -10px rgba(255, 138, 107, 0.25);
-  }
-
-  /* Glassy Deep Orbit panel with lilac border */
+  /* Light paper panel (used by the music pill and the edit drawer) */
   .glass-orbit {
-    background: linear-gradient(160deg, rgba(43, 27, 74, 0.72), rgba(26, 16, 48, 0.62));
-    border: 1px solid rgba(185, 163, 227, 0.2);
-    -webkit-backdrop-filter: blur(14px) saturate(130%);
-    backdrop-filter: blur(14px) saturate(130%);
+    background: rgba(251, 247, 242, 0.9);
+    border: 1px solid #E5D9CD;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   }
 
-  /* Coral glow edge used on polaroids & folded letters */
-  .coral-glow {
-    box-shadow:
-      0 0 0 1px rgba(255, 138, 107, 0.28),
-      0 0 28px -6px rgba(255, 138, 107, 0.45),
-      0 30px 60px -24px rgba(10, 4, 24, 0.85);
-  }
-
-  /* Section-ending horizon glow */
-  .section-horizon {
-    background: radial-gradient(60% 100% at 50% 100%, rgba(255, 138, 107, 0.16) 0%, rgba(255, 201, 163, 0.06) 40%, transparent 72%);
-  }
-
-  .section-horizon::after {
-    content: "";
-    position: absolute;
-    left: 15%;
-    right: 15%;
-    bottom: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 201, 163, 0.45), rgba(255, 138, 107, 0.6), rgba(255, 201, 163, 0.45), transparent);
-  }
-
-  /* Comet streak (head + tail) */
-  .comet-streak {
-    width: clamp(140px, 18vw, 260px);
-    height: 2px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #FFF4EA 0%, #FF8A6B 8%, rgba(255, 138, 107, 0.45) 35%, rgba(185, 163, 227, 0.12) 75%, transparent 100%);
-    filter: drop-shadow(0 0 6px rgba(255, 138, 107, 0.85));
-    transform-origin: left center;
-  }
-
-  .comet-streak::before {
-    content: "";
-    position: absolute;
-    left: -3px;
-    top: 50%;
-    width: 7px;
-    height: 7px;
-    margin-top: -3.5px;
-    border-radius: 999px;
-    background: #FFF4EA;
-    box-shadow: 0 0 10px 3px rgba(255, 138, 107, 0.9), 0 0 24px 8px rgba(255, 201, 163, 0.35);
-  }
-
-  /* Folded-letter paper with a crease */
-  .folded-letter {
-    background:
-      linear-gradient(135deg, transparent 49.4%, rgba(26, 16, 48, 0.12) 49.6%, rgba(26, 16, 48, 0.04) 51%, transparent 51.2%),
-      linear-gradient(180deg, #F7EEE3 0%, #F3E2D2 100%);
-  }
-
-  .folded-letter::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 49.5%, rgba(26, 16, 48, 0.1) 50%, transparent 50.6%);
-    pointer-events: none;
+  .font-italic-serif {
+    font-family: var(--font-italic);
+    font-style: italic;
   }
 }
