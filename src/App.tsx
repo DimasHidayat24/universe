@@ -243,7 +243,7 @@ export default function App() {
               </h2>
             </Reveal>
           </div>
-          <Reveal delay={0.15} className="mt-14 sm:mt-20">
+          <div className="mt-14 sm:mt-20">
             <PhotoMarquee
               rowA={[
                 { src: gallery5, alt: 'Foto berdua dengan latar tirai merah' },
@@ -267,7 +267,7 @@ export default function App() {
                 { src: gallery17, alt: 'Makan bersama teman-teman' },
               ]}
             />
-          </Reveal>
+          </div>
         </section>
 
         {/* ================= 02 WHAT I WANT YOU TO KNOW ================= */}

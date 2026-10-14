@@ -75,13 +75,21 @@
 }
 
 /* Photo marquee: the track holds two identical halves, so -50% loops seamlessly */
-.marquee-track { animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform; }
+.marquee-track { animation-timing-function: linear; animation-iteration-count: infinite; animation-play-state: running; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+/* Pause/tilt on hover only on devices that really hover (a tap on a phone must never freeze the row) */
+@media (hover: hover) and (pointer: fine) {
+  .marquee-row:hover .marquee-track { animation-play-state: paused; }
+  .marquee-card:hover { rotate: 0deg; scale: 1.03; }
+}
 .marquee-left  { animation-name: marquee-left; }
 .marquee-right { animation-name: marquee-right; }
 @keyframes marquee-left  { from { transform: translate3d(0, 0, 0); }    to { transform: translate3d(-50%, 0, 0); } }
 @keyframes marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
 @media (prefers-reduced-motion: reduce) {
+  /* No auto-scroll: let the rows be swiped by hand instead */
   .marquee-track { animation: none !important; }
+  .marquee-row { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .marquee-row::-webkit-scrollbar { display: none; }
 }
 
 /* Letter paper: warm parchment with soft vignette and fibre grain */
