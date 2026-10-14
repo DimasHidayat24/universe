@@ -4,6 +4,7 @@ import { DEFAULT_LETTER_CONFIG } from './config';
 import { EditorialPhoto } from './components/EditorialPhoto';
 import { AmbientAudioPlayer } from './components/AmbientAudioPlayer';
 import { Reveal } from './components/Reveal';
+import { BoardingPass } from './components/BoardingPass';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
 import skyHill from './assets/sky/sky-hill.jpg';
@@ -22,13 +23,6 @@ const Kicker: React.FC<{ n: string; label: string; className?: string }> = ({ n,
     <span className="text-[#5B8FC7]">{n}</span>
     <span className="h-px w-8 bg-[#1C1B19]/15" aria-hidden="true" />
     <span>{label}</span>
-  </div>
-);
-
-const PassField: React.FC<{ label: string; value: string; big?: boolean }> = ({ label, value, big }) => (
-  <div>
-    <p className="text-[10px] tracking-[0.28em] uppercase text-[#6E6A64]">{label}</p>
-    <p className={`mt-1.5 ${big ? 'font-serif text-2xl sm:text-3xl' : 'text-sm sm:text-base'} text-[#1C1B19]`}>{value}</p>
   </div>
 );
 
@@ -329,27 +323,8 @@ export default function App() {
               </Reveal>
             </div>
 
-            <Reveal delay={0.15} className="lg:col-span-7">
-              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-white to-[#F1F6FB] border border-[#1C1B19]/8 shadow-[0_40px_80px_-40px_rgba(40,70,110,0.45)]">
-                <div className="flex items-center justify-between px-7 sm:px-10 py-5 border-b border-dashed border-[#1C1B19]/12">
-                  <p className="font-serif text-sm tracking-[0.3em] uppercase">Our Little Universe</p>
-                  <p className="text-[10px] tracking-[0.3em] uppercase text-[#5B8FC7]">Boarding pass</p>
-                </div>
-                <div className="px-7 sm:px-10 py-8 sm:py-10 grid grid-cols-2 gap-y-8 gap-x-6">
-                  <PassField label="Dari" value="Hari pertama kita" big />
-                  <PassField label="Ke" value="Selamanya" big />
-                  <PassField label="Penumpang" value={config.partnerName} />
-                  <PassField label="Berangkat" value={config.startDateLabel} />
-                  <PassField label="Kursi" value="Di sebelahku" />
-                  <PassField label="Kelas" value="Seumur hidup" />
-                </div>
-                <div className="relative border-t border-dashed border-[#1C1B19]/12 px-7 sm:px-10 py-5 flex items-center justify-between gap-4">
-                  <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-[#FAF8F2]" aria-hidden="true" />
-                  <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-[#FAF8F2]" aria-hidden="true" />
-                  <p className="text-xs text-[#6E6A64]">{config.anniversaryDate}</p>
-                  <p className="font-italic-serif text-lg text-[#D98C7A]">♡</p>
-                </div>
-              </div>
+            <Reveal delay={0.15} className="lg:col-span-7 py-6">
+              <BoardingPass passenger={config.partnerName} date={config.startDateLabel} />
             </Reveal>
           </div>
         </section>
