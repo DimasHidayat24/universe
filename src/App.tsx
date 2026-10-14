@@ -15,6 +15,8 @@ import gallery5 from './assets/images/gallery/gallery-5.jpg';
 import gallery6 from './assets/images/gallery/gallery-6.jpg';
 import gallery7 from './assets/images/gallery/gallery-7.jpg';
 import gallery8 from './assets/images/gallery/gallery-8.jpg';
+import gallery9 from './assets/images/gallery/gallery-9.jpg';
+import gallery10 from './assets/images/gallery/gallery-10.jpg';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
 import skyHill from './assets/sky/sky-hill.jpg';
@@ -241,12 +243,14 @@ export default function App() {
                 { src: gallery1, alt: 'Selfie dengan boneka kelinci' },
                 { src: gallery7, alt: 'Selfie berdua' },
                 { src: gallery2, alt: 'Foto berdua di depan gedung' },
+                { src: gallery9, alt: 'Salsabilla tersenyum di bawah tenda merah' },
               ]}
               rowB={[
                 { src: gallery6, alt: 'Foto berdua duduk dengan latar tirai merah' },
                 { src: gallery3, alt: 'Buket bunga di mobil' },
                 { src: gallery8, alt: 'Strip photobooth' },
                 { src: gallery4, alt: 'Foto masa kecil naik sepeda' },
+                { src: gallery10, alt: 'Foto berdua di depan Fakultas Hukum Universitas Brawijaya' },
               ]}
             />
           </Reveal>
