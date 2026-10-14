@@ -101,3 +101,13 @@
     radial-gradient(ellipse at 100% 100%, rgba(176,138,90,0.16), transparent 45%),
     repeating-linear-gradient(0deg, rgba(120,90,50,0.025) 0 1px, transparent 1px 3px);
 }
+
+/* Accent words: sky to rose, in deeper shades of the palette so they stay readable on cream */
+.text-grad {
+  background-image: linear-gradient(90deg, #3F73AD 0%, #B86A58 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

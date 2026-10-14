@@ -42,7 +42,7 @@ const Field: React.FC<{ label: string; value: string; align?: 'left' | 'right' |
   className = '',
 }) => (
   <div className={`min-w-0 ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : ''} ${className}`}>
-    <p className="text-[9px] font-bold tracking-[0.08em] uppercase text-white/70">{label}</p>
+    <p className="text-[9px] font-bold tracking-[0.08em] uppercase text-white/90">{label}</p>
     <p className="mt-0.5 text-[15px] sm:text-base leading-tight text-white truncate">{value}</p>
   </div>
 );
@@ -63,7 +63,7 @@ export const BoardingPass: React.FC<BoardingPassProps> = ({ passenger, date }) =
       />
       <article
         aria-label="Boarding pass"
-        className="relative overflow-hidden rounded-[20px] bg-gradient-to-b from-[#6C9FD3] to-[#4A80BC] text-white shadow-[0_40px_80px_-30px_rgba(40,80,130,0.6),0_2px_6px_rgba(40,80,130,0.15)]"
+        className="relative overflow-hidden rounded-[20px] bg-gradient-to-b from-[#4F86C2] to-[#2F5F96] text-white shadow-[0_40px_80px_-30px_rgba(40,80,130,0.6),0_2px_6px_rgba(40,80,130,0.15)]"
       >
         {/* sheen */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_20%_0%,rgba(255,255,255,0.28),transparent_60%)]" aria-hidden="true" />
@@ -85,12 +85,12 @@ export const BoardingPass: React.FC<BoardingPassProps> = ({ passenger, date }) =
         {/* route */}
         <div className="relative px-5 pt-6 pb-2 flex items-end justify-between">
           <div>
-            <p className="text-[11px] text-white/80">Hari pertama</p>
+            <p className="text-[11px] text-white/90">Hari pertama</p>
             <p className="text-[46px] leading-none font-light tracking-tight">AWL</p>
           </div>
           <Plane className="mb-3 h-6 w-6 rotate-45 text-white/90" strokeWidth={1.5} aria-hidden="true" />
           <div className="text-right">
-            <p className="text-[11px] text-white/80">Selamanya</p>
+            <p className="text-[11px] text-white/90">Selamanya</p>
             <p className="text-[46px] leading-none font-light tracking-tight">SLM</p>
           </div>
         </div>
@@ -129,7 +129,7 @@ export const BoardingPass: React.FC<BoardingPassProps> = ({ passenger, date }) =
               <Finder x={0} y={size - 7} />
             </svg>
           </div>
-          <p className="mt-3 text-[10px] tracking-[0.2em] uppercase text-white/75">Berlaku seumur hidup</p>
+          <p className="mt-3 text-[10px] tracking-[0.2em] uppercase text-white/90">Berlaku seumur hidup</p>
         </div>
       </article>
     </div>
