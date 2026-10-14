@@ -122,8 +122,8 @@ export default function App() {
           id="the-opening"
           className="relative min-h-screen w-full flex items-center px-6 sm:px-12 lg:px-20 py-20"
         >
-          <div className="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-center">
-            <div className="lg:col-span-7 text-center lg:text-left">
+          <div className="max-w-4xl w-full mx-auto">
+            <div className="text-center">
               <Reveal>
                 <p className="text-[11px] tracking-[0.32em] uppercase text-[#7A6C64]">
                   For <span className="text-[#B0634F]">{config.partnerName}</span>
@@ -131,13 +131,13 @@ export default function App() {
               </Reveal>
 
               <Reveal delay={0.1}>
-                <h1 className="mt-8 font-serif text-[2.6rem] sm:text-6xl lg:text-[4.6rem] leading-[1.08] tracking-[-0.01em] text-balance">
+                <h1 className="mt-8 font-serif text-[2.6rem] sm:text-6xl lg:text-[5.2rem] leading-[1.06] tracking-[-0.01em] text-balance">
                   Of all the people in this world, I'm glad it's <span className="font-italic-serif text-[#B0634F]">you.</span>
                 </h1>
               </Reveal>
 
               <Reveal delay={0.2}>
-                <p className="mt-8 max-w-md mx-auto lg:mx-0 text-base sm:text-lg leading-relaxed text-[#7A6C64] font-light">
+                <p className="mt-8 max-w-md mx-auto text-base sm:text-lg leading-relaxed text-[#7A6C64] font-light">
                   A little place for everything I sometimes find difficult to say.
                 </p>
               </Reveal>
@@ -153,18 +153,6 @@ export default function App() {
               </Reveal>
             </div>
 
-            <div className="lg:col-span-5 flex justify-center">
-              <Reveal delay={0.15} className="w-[68%] sm:w-[52%] lg:w-full max-w-sm">
-                <div className="rounded-t-full overflow-hidden bg-[#F4ECE3] aspect-[3/4] shadow-[0_30px_60px_-34px_rgba(60,40,30,0.45)]">
-                  <img
-                    src={config.heroPhotoUrl}
-                    alt="Kita berdua"
-                    loading="eager"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </Reveal>
-            </div>
           </div>
         </section>
 
