@@ -3,12 +3,12 @@ import { useReducedMotion } from 'motion/react';
 
 const planeUrl = new URL(`../assets/sky/plane3d.png`, import.meta.url).href;
 
-// Waypoints of the flight: enter from the left, trace a heart with rounded
-// turns (no sharp cusps), then climb away to the upper left like skywriting.
+// Flight: enter low from the left, climb into the left lobe, trace the heart with
+// rounded turns (no sharp cusps), then fly back out to the left like skywriting.
 const POINTS: [number, number][] = [
-  [-160, 190], [60, 140], [250, 70], [400, 36], [470, 56], [500, 100],
-  [530, 56], [600, 36], [665, 80], [662, 145], [600, 205], [500, 258],
-  [400, 205], [338, 145], [335, 80], [300, 10], [150, -70], [-180, -150],
+  [-180, 250], [80, 235], [260, 210], [330, 150], [345, 80], [400, 36], [462, 46], [500, 94],
+  [538, 46], [600, 36], [655, 80], [660, 145], [600, 205], [500, 258], [410, 215], [330, 170],
+  [180, 110], [-180, 40],
 ];
 
 /** Catmull-Rom spline -> cubic béziers, so every join is tangent-continuous. */
