@@ -38,10 +38,10 @@ export interface PersonalLetterConfig {
  * Ganti nilai di bawah ini langsung di kode. Foto ada di src/assets/images.
  */
 export const DEFAULT_LETTER_CONFIG: PersonalLetterConfig = {
-  partnerName: '[NAMA PACAR]',
-  yourName: '[NAMA SAYA]',
-  relationshipDuration: '[DURASI HUBUNGAN]',
-  anniversaryDate: '[TANGGAL ANNIVERSARY]',
+  partnerName: 'Sayang',
+  yourName: '',
+  relationshipDuration: '1 Tahun Bersama',
+  anniversaryDate: '19 Oktober 2025 — 19 Oktober 2026',
   musicUrl: '/music/sampai-nanti.mp3',
   musicTitle: 'Kahitna — Sampai Nanti',
   memoryPhoto1Url: memoryPhotoOne,
