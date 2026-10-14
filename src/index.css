@@ -6,8 +6,8 @@
    ============================================================================ */
 
 @theme {
-  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Libre Caslon Condensed", "Instrument Serif", Georgia, serif;
+  --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   --color-plum: #1A1030;   /* Plum Night — background */
   --color-orbit: #2B1B4A;  /* Deep Orbit — cards / haze */
