@@ -39,7 +39,7 @@ export interface PersonalLetterConfig {
  */
 export const DEFAULT_LETTER_CONFIG: PersonalLetterConfig = {
   partnerName: 'Sayang',
-  yourName: '',
+  yourName: 'Dimas T. Hidayat',
   relationshipDuration: '1 Tahun Bersama',
   anniversaryDate: '19 Oktober 2025 — 19 Oktober 2026',
   musicUrl: '/music/sampai-nanti.mp3',
