@@ -156,25 +156,26 @@ export default function App() {
             <img src={cloudWisps} alt="" className="drift-b absolute top-[28%] left-[-15%] w-[130%] opacity-[0.12] scale-x-[-1]" />
             <img src={cloudWisps} alt="" className="drift-c absolute top-[46%] left-[-5%] w-[110%] opacity-[0.10]" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#3E78B5]/10 via-transparent via-60% to-[#FAF8F2]" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#2F5F96]/55 via-[#4A80BC]/25 via-55% to-[#FAF8F2]" aria-hidden="true" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_48%,rgba(47,95,150,0.55),transparent_75%)]" aria-hidden="true" />
 
           <motion.div
             style={{ y: textY, opacity: textO }}
             className="relative z-10 h-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center"
           >
             <Reveal>
-              <p className="text-[11px] tracking-[0.32em] uppercase text-white/90">
+              <p className="text-[11px] tracking-[0.32em] uppercase text-white drop-shadow-[0_1px_8px_rgba(28,60,100,0.6)]">
                 For <span className="text-white font-bold">{config.partnerName}</span>
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <h1 className="mt-8 font-serif text-[2.6rem] sm:text-6xl lg:text-[5.4rem] leading-[1.04] tracking-[-0.01em] text-balance text-white drop-shadow-[0_2px_30px_rgba(40,80,130,0.35)]">
+              <h1 className="mt-8 font-serif text-[2.6rem] sm:text-6xl lg:text-[5.4rem] leading-[1.04] tracking-[-0.01em] text-balance text-white drop-shadow-[0_2px_24px_rgba(28,60,100,0.55)]">
                 Of all the people in this world, I'm glad it's{' '}
-                <span className="font-italic-serif text-white/85">you.</span>
+                <span className="font-italic-serif bg-gradient-to-r from-white to-[#F6D5CB] bg-clip-text text-transparent">you.</span>
               </h1>
             </Reveal>
             <Reveal delay={0.2}>
-              <p className="mt-8 max-w-md mx-auto text-base sm:text-lg leading-relaxed text-white/90 font-light drop-shadow-[0_1px_12px_rgba(40,80,130,0.3)]">
+              <p className="mt-8 max-w-md mx-auto text-base sm:text-lg leading-relaxed text-white font-normal drop-shadow-[0_1px_12px_rgba(28,60,100,0.6)]">
                 A little place for everything I sometimes find difficult to say.
               </p>
             </Reveal>
@@ -183,7 +184,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => scrollToId('tentang')}
-            className="absolute z-10 bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-[10px] tracking-[0.32em] uppercase text-[#6E6A64] hover:text-[#1C1B19] cursor-pointer"
+            className="absolute z-10 bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-[10px] tracking-[0.32em] uppercase text-[#4A4640] hover:text-[#1C1B19] cursor-pointer"
           >
             Scroll untuk mulai
             <span className="h-10 w-px bg-gradient-to-b from-[#1C1B19]/40 to-transparent" aria-hidden="true" />
@@ -198,7 +199,7 @@ export default function App() {
               <span className="text-[#6E6A64]">
                 Website kecil ini dibuat untuk satu orang, dan setiap bagiannya cuma tentang{' '}
               </span>
-              <span className="font-italic-serif text-[#8C8780]">kamu.</span>
+              <span className="font-italic-serif text-grad">kamu.</span>
             </p>
           </Reveal>
         </section>
@@ -213,7 +214,7 @@ export default function App() {
               <Reveal delay={0.1} className="lg:col-span-8">
                 <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.08] text-balance">
                   Somehow, you became my{' '}
-                  <span className="font-italic-serif text-[#8C8780]">favorite part</span> of every day.
+                  <span className="font-italic-serif text-grad">favorite part</span> of every day.
                 </h2>
               </Reveal>
             </div>
@@ -232,14 +233,14 @@ export default function App() {
         </section>
 
         {/* ================= GALLERY: PHOTOS GLIDING BOTH WAYS ================= */}
-        <section id="galeri" aria-label="Galeri foto" className="py-24 sm:py-32 overflow-hidden">
+        <section id="galeri" aria-label="Galeri foto" className="bg-gradient-to-b from-[#FAF8F2] via-[#F8EEEA] to-[#FAF8F2] py-24 sm:py-32 overflow-hidden">
           <div className="px-6 sm:px-10 max-w-7xl mx-auto text-center">
             <Reveal>
               <p className="text-[11px] tracking-[0.3em] uppercase text-[#6E6A64]">Potongan-potongan kecil</p>
             </Reveal>
             <Reveal delay={0.1}>
               <h2 className="mt-6 font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.08] text-balance">
-                Hal-hal kecil, <span className="font-italic-serif text-[#8C8780]">cerita kita.</span>
+                Hal-hal kecil, <span className="font-italic-serif text-grad">cerita kita.</span>
               </h2>
             </Reveal>
           </div>
@@ -279,7 +280,7 @@ export default function App() {
             <Reveal delay={0.1}>
               <h2 className="mt-8 font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.08] max-w-3xl text-balance">
                 If there's one thing I hope you{' '}
-                <span className="font-italic-serif text-[#8C8780]">never forget</span>…
+                <span className="font-italic-serif text-grad">never forget</span>…
               </h2>
             </Reveal>
 
@@ -295,7 +296,7 @@ export default function App() {
                       aria-selected={active}
                       onClick={() => setActiveMsg(i)}
                       className={`w-full text-left flex items-baseline gap-5 py-6 border-t hairline cursor-pointer transition-colors ${
-                        active ? 'text-[#1C1B19]' : 'text-[#1C1B19]/35 hover:text-[#1C1B19]/65'
+                        active ? 'text-[#1C1B19]' : 'text-[#1C1B19]/55 hover:text-[#1C1B19]/80'
                       }`}
                     >
                       <span className={`font-italic-serif text-lg w-8 ${active ? 'text-[#5B8FC7]' : ''}`}>{item.number}</span>
@@ -335,7 +336,7 @@ export default function App() {
         </section>
 
         {/* ================= 03 THE JOURNEY + BOARDING PASS ================= */}
-        <section id="perjalanan" className="px-6 sm:px-10 py-28 sm:py-40 scroll-mt-20">
+        <section id="perjalanan" className="bg-gradient-to-b from-[#FAF8F2] via-[#EEF3F8] to-[#FAF8F2] px-6 sm:px-10 py-28 sm:py-40 scroll-mt-20">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5">
               <Reveal>
@@ -343,7 +344,7 @@ export default function App() {
               </Reveal>
               <Reveal delay={0.1}>
                 <h2 className="mt-8 font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.08] text-balance">
-                  Satu tiket, <span className="font-italic-serif text-[#8C8780]">satu tujuan.</span>
+                  Satu tiket, <span className="font-italic-serif text-grad">satu tujuan.</span>
                 </h2>
               </Reveal>
               <Reveal delay={0.2}>
@@ -374,14 +375,15 @@ export default function App() {
           <div className="relative h-[70vh] min-h-[480px] overflow-hidden flex items-center justify-center text-center px-6">
             <img src={skyHill} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[50%_70%]" />
             <img src={cloudWisps} alt="" aria-hidden="true" className="drift-b absolute top-[20%] left-[-10%] w-[120%] opacity-[0.15] mix-blend-screen pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2] via-transparent to-[#FAF8F2]" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2] via-[#2F5F96]/35 via-50% to-[#FAF8F2]" aria-hidden="true" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,rgba(40,80,130,0.45),transparent_75%)]" aria-hidden="true" />
             <div className="relative z-10 max-w-4xl">
               <Reveal>
                 <Kicker n="04" label="And here we are" className="justify-center !text-white [&>span:first-child]:!text-white" />
               </Reveal>
               <Reveal delay={0.1}>
                 <h2 className="mt-8 font-serif text-5xl sm:text-6xl lg:text-[5.4rem] leading-[1.03] text-balance text-white drop-shadow-[0_2px_30px_rgba(30,60,90,0.45)]">
-                  Happy Anniversary, <span className="font-italic-serif text-white/85">my love.</span>
+                  Happy Anniversary, <span className="font-italic-serif bg-gradient-to-r from-white to-[#F6D5CB] bg-clip-text text-transparent">my love.</span>
                 </h2>
               </Reveal>
               <Reveal delay={0.2}>
