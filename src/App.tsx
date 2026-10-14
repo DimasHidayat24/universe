@@ -27,6 +27,7 @@ import gallery17 from './assets/images/gallery/gallery-17.jpg';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
 import skyNyc from './assets/sky/sky-nyc.jpg';
+import footerCouple from './assets/sky/footer-couple.jpg';
 
 const NAV = [
   { id: 'cerita', label: 'Cerita', n: '01' },
@@ -462,32 +463,51 @@ export default function App() {
       </main>
 
       {/* ================= FOOTER ================= */}
-      <footer className="border-t hairline px-6 sm:px-10 py-12 pb-24 sm:pb-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <p className="font-serif text-sm tracking-[0.32em] uppercase">Our Little Universe</p>
-          <nav className="flex flex-wrap justify-center gap-6" aria-label="Footer">
-            {NAV.map((item) => (
+      <footer className="relative bg-[#2A5D8C] text-[#FAF8F2] overflow-hidden">
+        <div className="px-6 sm:px-10 pt-20 sm:pt-28 max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12">
+            <div className="max-w-xl">
+              <p className="text-[11px] tracking-[0.32em] uppercase text-[#FAF8F2]/80">Untuk {config.partnerName}</p>
+              <h2 className="mt-6 font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.05] text-balance">
+                Our Little <span className="font-italic-serif text-[#F6D5CB]">Universe.</span>
+              </h2>
+              <p className="mt-6 text-base sm:text-lg leading-relaxed text-[#FAF8F2]/90 font-light">
+                Tempat kecil untuk kita berdua, hari ini dan seterusnya.
+              </p>
+            </div>
+            <div className="flex flex-col items-start lg:items-end gap-6">
+              <nav className="flex flex-wrap gap-x-7 gap-y-3" aria-label="Footer">
+                {NAV.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => scrollToId(item.id)}
+                    className="text-[13px] tracking-[0.08em] text-[#FAF8F2]/85 hover:text-white underline-offset-4 hover:underline cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
               <button
-                key={item.id}
                 type="button"
-                onClick={() => scrollToId(item.id)}
-                className="text-[13px] text-[#6E6A64] hover:text-[#1C1B19] cursor-pointer"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="px-5 py-2.5 rounded-full bg-[#FAF8F2] text-[#1C1B19] text-[11px] tracking-[0.22em] uppercase hover:bg-white transition-colors cursor-pointer"
               >
-                {item.label}
+                Kembali ke langit ↑
               </button>
-            ))}
-          </nav>
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-[11px] tracking-[0.24em] uppercase text-[#5B8FC7] hover:text-[#1C1B19] cursor-pointer"
-          >
-            Kembali ke langit ↑
-          </button>
+            </div>
+          </div>
+          <p className="mt-14 pt-6 border-t border-[#FAF8F2]/20 text-[11px] text-[#FAF8F2]/75">
+            © 2026 {config.yourName} untuk {config.partnerName}. Dibuat dengan cinta.
+          </p>
         </div>
-        <p className="mt-8 text-center text-[11px] text-[#6E6A64]">
-          © 2026 {config.yourName} untuk {config.partnerName}. Dibuat dengan cinta.
-        </p>
+        <img
+          src={footerCouple}
+          alt="Ilustrasi sepasang kekasih duduk berdua di bukit menikmati pemandangan"
+          loading="lazy"
+          className="block w-full h-auto mt-4 select-none"
+          draggable={false}
+        />
       </footer>
 
       <AmbientAudioPlayer musicUrl={config.musicUrl} musicTitle={config.musicTitle} />
