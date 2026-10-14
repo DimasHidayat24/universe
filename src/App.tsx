@@ -219,25 +219,6 @@ export default function App() {
               ))}
             </div>
 
-            <div className="mt-24 sm:mt-32 grid grid-cols-2 gap-5 sm:gap-10 max-w-4xl mx-auto items-start">
-              <EditorialPhoto
-                src={config.memoryPhoto1Url}
-                alt="Momen kenangan berdua"
-                placeholderLabel={config.memoryPhoto1Placeholder}
-                aspectClass="aspect-[3/4]"
-                caption="Sepotong waktu yang selalu ingin aku simpan."
-              />
-              <div className="pt-16 sm:pt-28">
-                <EditorialPhoto
-                  src={config.memoryPhoto2Url}
-                  alt="Langkah perjalanan bersama"
-                  placeholderLabel={config.memoryPhoto2Placeholder}
-                  aspectClass="aspect-[3/4]"
-                  caption="Berjalan pelan, tumbuh bersama."
-                  delay={0.15}
-                />
-              </div>
-            </div>
           </div>
         </section>
 
