@@ -17,6 +17,13 @@ import gallery7 from './assets/images/gallery/gallery-7.jpg';
 import gallery8 from './assets/images/gallery/gallery-8.jpg';
 import gallery9 from './assets/images/gallery/gallery-9.jpg';
 import gallery10 from './assets/images/gallery/gallery-10.jpg';
+import gallery11 from './assets/images/gallery/gallery-11.jpg';
+import gallery12 from './assets/images/gallery/gallery-12.jpg';
+import gallery13 from './assets/images/gallery/gallery-13.jpg';
+import gallery14 from './assets/images/gallery/gallery-14.jpg';
+import gallery15 from './assets/images/gallery/gallery-15.jpg';
+import gallery16 from './assets/images/gallery/gallery-16.jpg';
+import gallery17 from './assets/images/gallery/gallery-17.jpg';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
 import skyHill from './assets/sky/sky-hill.jpg';
@@ -244,6 +251,10 @@ export default function App() {
                 { src: gallery7, alt: 'Selfie berdua' },
                 { src: gallery2, alt: 'Foto berdua di depan gedung' },
                 { src: gallery9, alt: 'Salsabilla tersenyum di bawah tenda merah' },
+                { src: gallery11, alt: 'Salsabilla minum dengan pipi menggembung' },
+                { src: gallery14, alt: 'Selfie berdua di warung tenda' },
+                { src: gallery16, alt: 'Salsabilla tersenyum di restoran' },
+                { src: gallery13, alt: 'Makan malam berdua di rooftop' },
               ]}
               rowB={[
                 { src: gallery6, alt: 'Foto berdua duduk dengan latar tirai merah' },
@@ -251,6 +262,9 @@ export default function App() {
                 { src: gallery8, alt: 'Strip photobooth' },
                 { src: gallery4, alt: 'Foto masa kecil naik sepeda' },
                 { src: gallery10, alt: 'Foto berdua di depan Fakultas Hukum Universitas Brawijaya' },
+                { src: gallery12, alt: 'Foto bayi dengan topi merah' },
+                { src: gallery15, alt: 'Salsabilla memeluk boneka beruang' },
+                { src: gallery17, alt: 'Makan bersama teman-teman' },
               ]}
             />
           </Reveal>

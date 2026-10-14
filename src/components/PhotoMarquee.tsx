@@ -12,7 +12,8 @@ const Row: React.FC<{ photos: GalleryPhoto[]; direction: 'left' | 'right'; durat
   duration,
 }) => {
   // Two identical halves so the loop is seamless (track moves exactly -50%).
-  const half = [...photos, ...photos, ...photos];
+  const reps = photos.length >= 6 ? 1 : 3;
+  const half = Array.from({ length: reps }, () => photos).flat();
   const track = [...half, ...half];
   return (
     <div className="group relative overflow-hidden py-4">
@@ -47,7 +48,7 @@ const Row: React.FC<{ photos: GalleryPhoto[]; direction: 'left' | 'right'; durat
 /** Two rows of photos gliding in opposite directions, faded at both edges. */
 export const PhotoMarquee: React.FC<{ rowA: GalleryPhoto[]; rowB: GalleryPhoto[] }> = ({ rowA, rowB }) => (
   <div className="relative [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-    <Row photos={rowA} direction="right" duration={55} />
-    <Row photos={rowB} direction="left" duration={60} />
+    <Row photos={rowA} direction="right" duration={Math.max(55, rowA.length * 9)} />
+    <Row photos={rowB} direction="left" duration={Math.max(60, rowB.length * 10)} />
   </div>
 );
