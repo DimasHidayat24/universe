@@ -16,9 +16,9 @@ const Row: React.FC<{ photos: GalleryPhoto[]; direction: 'left' | 'right'; durat
   const half = Array.from({ length: reps }, () => photos).flat();
   const track = [...half, ...half];
   return (
-    <div className="group relative overflow-hidden py-4">
+    <div className="marquee-row relative overflow-hidden py-3 sm:py-4">
       <div
-        className={`marquee-track flex w-max gap-5 sm:gap-7 group-hover:[animation-play-state:paused] ${
+        className={`marquee-track flex w-max gap-4 sm:gap-7 ${
           direction === 'left' ? 'marquee-left' : 'marquee-right'
         }`}
         style={{ animationDuration: `${duration}s` }}
@@ -27,16 +27,17 @@ const Row: React.FC<{ photos: GalleryPhoto[]; direction: 'left' | 'right'; durat
           <figure
             key={i}
             aria-hidden={i >= photos.length ? true : undefined}
-            className={`shrink-0 rounded-[1.4rem] bg-white p-1.5 sm:p-2 border border-[#1C1B19]/6 shadow-[0_24px_50px_-30px_rgba(40,70,110,0.45)] transition-transform duration-500 hover:rotate-0 hover:scale-[1.03] ${
+            className={`shrink-0 rounded-[1.4rem] bg-white p-1.5 sm:p-2 border border-[#1C1B19]/6 shadow-[0_24px_50px_-30px_rgba(40,70,110,0.45)] marquee-card transition-transform duration-500 ${
               i % 2 === 0 ? '-rotate-[1.5deg]' : 'rotate-[1.5deg]'
             }`}
           >
             <img
               src={p.src}
               alt={i < photos.length ? p.alt : ''}
-              loading="lazy"
+              loading="eager"
+              decoding="async"
               draggable={false}
-              className="h-48 sm:h-64 lg:h-72 w-auto rounded-[1.05rem] object-cover select-none"
+              className="h-44 sm:h-64 lg:h-72 w-auto rounded-[1.05rem] object-cover select-none"
             />
           </figure>
         ))}
