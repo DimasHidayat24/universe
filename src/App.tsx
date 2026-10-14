@@ -124,19 +124,6 @@ export default function App() {
           >
             Our Little Universe
           </button>
-          <nav className="hidden md:flex items-center gap-8" aria-label="Bagian">
-            {NAV.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => scrollToId(item.id)}
-                className="group flex items-start gap-1.5 text-[13px] text-[#F4ECE3]/80 hover:text-[#F4ECE3] transition-colors cursor-pointer"
-              >
-                <span>{item.label}</span>
-                <span className="text-[9px] text-[#D9B98C] group-hover:text-[#E0A08B]">{item.n}</span>
-              </button>
-            ))}
-          </nav>
           <button
             type="button"
             onClick={() => scrollToId('cerita')}
