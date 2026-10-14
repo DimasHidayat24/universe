@@ -71,3 +71,13 @@
   from { transform: translate3d(-6%, 0, 0); }
   to   { transform: translate3d(6%, 0, 0); }
 }
+
+/* Photo marquee: the track holds two identical halves, so -50% loops seamlessly */
+.marquee-track { animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform; }
+.marquee-left  { animation-name: marquee-left; }
+.marquee-right { animation-name: marquee-right; }
+@keyframes marquee-left  { from { transform: translate3d(0, 0, 0); }    to { transform: translate3d(-50%, 0, 0); } }
+@keyframes marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none !important; }
+}

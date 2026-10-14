@@ -5,6 +5,15 @@ import { EditorialPhoto } from './components/EditorialPhoto';
 import { AmbientAudioPlayer } from './components/AmbientAudioPlayer';
 import { Reveal } from './components/Reveal';
 import { BoardingPass } from './components/BoardingPass';
+import { PhotoMarquee } from './components/PhotoMarquee';
+import gallery1 from './assets/images/gallery/gallery-1.jpg';
+import gallery2 from './assets/images/gallery/gallery-2.jpg';
+import gallery3 from './assets/images/gallery/gallery-3.jpg';
+import gallery4 from './assets/images/gallery/gallery-4.jpg';
+import gallery5 from './assets/images/gallery/gallery-5.jpg';
+import gallery6 from './assets/images/gallery/gallery-6.jpg';
+import gallery7 from './assets/images/gallery/gallery-7.jpg';
+import gallery8 from './assets/images/gallery/gallery-8.jpg';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
 import skyHill from './assets/sky/sky-hill.jpg';
@@ -228,6 +237,36 @@ export default function App() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* ================= GALLERY: PHOTOS GLIDING BOTH WAYS ================= */}
+        <section id="galeri" aria-label="Galeri foto" className="py-24 sm:py-32 overflow-hidden">
+          <div className="px-6 sm:px-10 max-w-7xl mx-auto text-center">
+            <Reveal>
+              <p className="text-[11px] tracking-[0.3em] uppercase text-[#6E6A64]">Potongan-potongan kecil</p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <h2 className="mt-6 font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.08] text-balance">
+                Hal-hal kecil, <span className="font-italic-serif text-[#8C8780]">cerita kita.</span>
+              </h2>
+            </Reveal>
+          </div>
+          <Reveal delay={0.15} className="mt-14 sm:mt-20">
+            <PhotoMarquee
+              rowA={[
+                { src: gallery5, alt: 'Foto berdua dengan latar tirai merah' },
+                { src: gallery1, alt: 'Selfie dengan boneka kelinci' },
+                { src: gallery7, alt: 'Selfie berdua' },
+                { src: gallery2, alt: 'Foto berdua di depan gedung' },
+              ]}
+              rowB={[
+                { src: gallery6, alt: 'Foto berdua duduk dengan latar tirai merah' },
+                { src: gallery3, alt: 'Buket bunga di mobil' },
+                { src: gallery8, alt: 'Strip photobooth' },
+                { src: gallery4, alt: 'Foto masa kecil naik sepeda' },
+              ]}
+            />
+          </Reveal>
         </section>
 
         {/* ================= 02 WHAT I WANT YOU TO KNOW ================= */}
