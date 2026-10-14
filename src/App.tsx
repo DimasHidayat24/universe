@@ -57,10 +57,9 @@ export default function App() {
 
   const [showOneLastThing, setShowOneLastThing] = useState(false);
   const [activeMsg, setActiveMsg] = useState(0);
-  const [scrolled, setScrolled] = useState(false);
   const [days] = useState(() => daysTogether(config.startDateISO));
 
-  const { scrollYProgress, scrollY } = useScroll();
+  const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, restDelta: 0.001 });
 
   // Hero parallax: the sky sinks slowly, the cloud bank rises, the text lifts away.
@@ -71,8 +70,6 @@ export default function App() {
   const textO = useTransform(heroP, [0, 0.7], [1, 0]);
 
   const lastThingRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => scrollY.on('change', (v) => setScrolled(v > 40)), [scrollY]);
 
   useEffect(() => {
     if (showOneLastThing && lastThingRef.current) {
@@ -124,21 +121,6 @@ export default function App() {
       </div>
 
       {/* ================= NAV ================= */}
-      <header
-        className={`fixed top-0 inset-x-0 z-50 transition-[background-color,border-color] duration-500 border-b ${
-          scrolled ? 'bg-[#FAF8F2]/75 backdrop-blur-md border-[#1C1B19]/8' : 'bg-transparent border-transparent'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 h-16 sm:h-20 flex items-center justify-end gap-6">
-          <button
-            type="button"
-            onClick={() => scrollToId('cerita')}
-            className="px-5 py-2.5 rounded-full bg-[#1C1B19] text-white text-[11px] tracking-[0.22em] uppercase shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)] hover:bg-black transition-colors duration-300 cursor-pointer"
-          >
-            Buka Surat
-          </button>
-        </div>
-      </header>
 
       <main>
         {/* ================= HERO: ABOVE THE CLOUDS ================= */}
