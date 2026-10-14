@@ -42,7 +42,7 @@ export interface PersonalLetterConfig {
  * Ganti nilai di bawah ini langsung di kode. Foto ada di src/assets/images.
  */
 export const DEFAULT_LETTER_CONFIG: PersonalLetterConfig = {
-  partnerName: 'Sayang',
+  partnerName: 'Salsabilla Oceana Putri Hendra',
   yourName: 'Dimas T. Hidayat',
   relationshipDuration: '1 Tahun Bersama',
   anniversaryDate: '19 Oktober 2025 — 19 Oktober 2026',
