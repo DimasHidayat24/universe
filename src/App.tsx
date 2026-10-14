@@ -6,6 +6,7 @@ import { AmbientAudioPlayer } from './components/AmbientAudioPlayer';
 import { Reveal } from './components/Reveal';
 import { BoardingPass } from './components/BoardingPass';
 import { PhotoMarquee } from './components/PhotoMarquee';
+import { LetterEnvelope } from './components/LetterEnvelope';
 import gallery1 from './assets/images/gallery/gallery-1.jpg';
 import gallery2 from './assets/images/gallery/gallery-2.jpg';
 import gallery3 from './assets/images/gallery/gallery-3.jpg';
@@ -43,6 +44,7 @@ function daysTogether(iso: string) {
 export default function App() {
   const config = DEFAULT_LETTER_CONFIG;
   const reduce = useReducedMotion();
+  const firstName = config.partnerName.split(' ')[0];
 
   const [showOneLastThing, setShowOneLastThing] = useState(false);
   const [activeMsg, setActiveMsg] = useState(0);
@@ -404,51 +406,40 @@ export default function App() {
               />
             </div>
 
-            <div className="mt-20 sm:mt-24 max-w-xl mx-auto space-y-7 text-base sm:text-[1.075rem] leading-[1.95] text-[#1C1B19]/80 font-light">
+            <div className="mt-24 sm:mt-28">
               <Reveal>
-                <p className="font-italic-serif text-2xl sm:text-3xl leading-snug text-[#1C1B19]">
-                  Terima kasih sudah menjadi bagian dari perjalanan hidupku.
-                </p>
+                <LetterEnvelope to={firstName} initials="D&S">
+                  <p className="text-right font-fell italic text-sm sm:text-base text-[#3B2A1E]/70">Malang, 19 Oktober 2026</p>
+                  <p className="mt-10 font-letter text-4xl sm:text-5xl text-[#2A1D14]">My dearest {firstName},</p>
+                  <div className="mt-8 space-y-6 font-letter text-[1.55rem] sm:text-[1.85rem] leading-[1.55] text-[#2A1D14]/90">
+                    <p>Terima kasih sudah menjadi bagian dari perjalanan hidupku.</p>
+                    <p>
+                      Terima kasih untuk semua cerita, semua tawa, semua waktu yang kita punya, dan bahkan hal-hal kecil yang mungkin terlihat biasa, tetapi selalu punya tempat tersendiri buat aku.
+                    </p>
+                    <p>
+                      Aku nggak tahu semua hal yang akan kita temui ke depannya. Tapi aku berharap kita masih punya banyak kesempatan untuk tumbuh, belajar, saling memahami, dan menciptakan cerita-cerita baru yang suatu hari nanti bisa kita kenang sambil tersenyum.
+                    </p>
+                    <p>
+                      Kalau suatu saat nanti kamu bertanya apa yang membuatku bersyukur tentang perjalanan ini, aku harap jawabannya tetap sederhana:
+                    </p>
+                    <p className="py-4 text-center text-[1.9rem] sm:text-[2.3rem] leading-[1.4] text-[#8E1A22]">
+                      Karena aku pernah bertemu kamu, dan aku mendapatkan kesempatan untuk mencintai kamu.
+                    </p>
+                    <p>Happy anniversary, sayang. I'm so glad it's you.</p>
+                    {config.extraSpecialNote && config.extraSpecialNote.trim() !== '' && (
+                      <p className="text-[#8E1A22]">{config.extraSpecialNote}</p>
+                    )}
+                    <p>Always a little more, every day.</p>
+                  </div>
+                  <div className="mt-14 text-right">
+                    <p className="font-fell italic text-base sm:text-lg text-[#3B2A1E]/75">With all my love,</p>
+                    <p className="mt-2 font-letter text-4xl sm:text-5xl text-[#2A1D14]">{config.yourName || '♡'}</p>
+                  </div>
+                </LetterEnvelope>
               </Reveal>
-              <Reveal>
-                <p>
-                  Terima kasih untuk semua cerita, semua tawa, semua waktu yang kita punya, dan bahkan hal-hal kecil yang mungkin terlihat biasa, tetapi selalu punya tempat tersendiri buat aku.
-                </p>
-              </Reveal>
-              <Reveal>
-                <p>
-                  Aku nggak tahu semua hal yang akan kita temui ke depannya. Tapi aku berharap kita masih punya banyak kesempatan untuk tumbuh, belajar, saling memahami, dan menciptakan cerita-cerita baru yang suatu hari nanti bisa kita kenang sambil tersenyum.
-                </p>
-              </Reveal>
-              <Reveal>
-                <p>
-                  Kalau suatu saat nanti kamu bertanya apa yang membuatku bersyukur tentang perjalanan ini, aku harap jawabannya tetap sederhana:
-                </p>
-              </Reveal>
-              <Reveal>
-                <p className="py-8 my-4 border-y hairline font-italic-serif text-2xl sm:text-[1.7rem] leading-snug text-center text-[#5B8FC7]">
-                  Karena aku pernah bertemu kamu, dan aku mendapatkan kesempatan untuk mencintai kamu.
-                </p>
-              </Reveal>
-              <Reveal>
-                <p>Happy anniversary, sayang. I'm so glad it's you.</p>
-              </Reveal>
-              {config.extraSpecialNote && config.extraSpecialNote.trim() !== '' && (
-                <Reveal>
-                  <p className="pt-2 font-italic-serif text-xl text-[#D98C7A]">{config.extraSpecialNote}</p>
-                </Reveal>
-              )}
             </div>
 
-            <Reveal className="mt-24 text-center">
-              <p className="font-italic-serif text-2xl sm:text-3xl">Always a little more, every day.</p>
-              <p className="mt-10 text-[11px] uppercase tracking-[0.3em] text-[#6E6A64]">With all my love,</p>
-              {config.yourName ? (
-                <p className="mt-3 font-serif text-3xl">{config.yourName}</p>
-              ) : (
-                <p className="mt-3 text-[#D98C7A] text-xl" aria-hidden="true">♡</p>
-              )}
-
+            <Reveal className="mt-20 text-center">
               <div className="mt-16">
                 <button
                   type="button"

@@ -9,6 +9,8 @@
 @theme {
   --font-serif: "Libre Caslon Condensed", "Instrument Serif", Georgia, serif;
   --font-italic: "Instrument Serif", Georgia, serif;
+  --font-letter: "Pinyon Script", "Great Vibes", cursive;
+  --font-fell: "IM Fell English", Georgia, serif;
   --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   --color-cream: #FAF8F2;     /* page background */
@@ -80,4 +82,14 @@
 @keyframes marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none !important; }
+}
+
+/* Letter paper: warm parchment with soft vignette and fibre grain */
+.paper {
+  background-color: #FBF5E8;
+  background-image:
+    radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.7), transparent 65%),
+    radial-gradient(ellipse at 0% 0%, rgba(176,138,90,0.14), transparent 45%),
+    radial-gradient(ellipse at 100% 100%, rgba(176,138,90,0.16), transparent 45%),
+    repeating-linear-gradient(0deg, rgba(120,90,50,0.025) 0 1px, transparent 1px 3px);
 }
