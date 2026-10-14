@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   "Hangat & Tenang" — minimalist, elegant, warm.
-   Ivory paper, ink text, one rose-terracotta accent, lots of air.
+   "Di Atas Awan" — inspired by an above-the-clouds private aviation look.
+   Dusk sky, deep night ink, cream text, champagne + rose accents.
+   Fonts unchanged: Libre Caslon Condensed, Instrument Serif italic, Lato.
    ============================================================================ */
 
 @theme {
@@ -10,20 +11,19 @@
   --font-italic: "Instrument Serif", Georgia, serif;
   --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --color-ivory: #FBF7F2;  /* background */
-  --color-linen: #F4ECE3;  /* soft section */
-  --color-ink: #2B2320;    /* text */
-  --color-muted: #7A6C64;  /* secondary text */
-  --color-rose: #B0634F;   /* single warm accent */
-  --color-blush: #EAD6CB;  /* soft accent fill */
-  --color-line: #E5D9CD;   /* hairlines */
+  --color-night: #14121A;     /* page background */
+  --color-dusk: #1C1824;      /* raised panels */
+  --color-cream: #F4ECE3;     /* main text */
+  --color-haze: #A99E99;      /* secondary text */
+  --color-champagne: #D9B98C; /* gold accent */
+  --color-rose: #E0A08B;      /* warm accent */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #FBF7F2;
-    color: #2B2320;
+    background-color: #14121A;
+    color: #F4ECE3;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -40,22 +40,34 @@
   }
 
   ::selection {
-    background-color: #EAD6CB;
-    color: #2B2320;
+    background-color: rgba(217, 185, 140, 0.35);
+    color: #F4ECE3;
   }
 }
 
 @layer components {
-  /* Light paper panel (used by the music pill and the edit drawer) */
+  /* Frosted dark panel (music pill, nav once scrolled) */
   .glass-orbit {
-    background: rgba(251, 247, 242, 0.9);
-    border: 1px solid #E5D9CD;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: rgba(20, 18, 26, 0.55);
+    border: 1px solid rgba(244, 236, 227, 0.14);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
   }
 
   .font-italic-serif {
     font-family: var(--font-italic);
     font-style: italic;
   }
+
+  .hairline { border-color: rgba(244, 236, 227, 0.12); }
+
+  /* Slow drifting cloud wisps */
+  .drift-a { animation: drift 70s linear infinite alternate; }
+  .drift-b { animation: drift 95s linear infinite alternate-reverse; }
+  .drift-c { animation: drift 120s linear infinite alternate; }
+}
+
+@keyframes drift {
+  from { transform: translate3d(-6%, 0, 0); }
+  to   { transform: translate3d(6%, 0, 0); }
 }

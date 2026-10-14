@@ -11,6 +11,10 @@ export interface PersonalLetterConfig {
   relationshipDuration: string;
   /** Tanggal anniversary — tampil di bagian penutup (contoh: "[TANGGAL ANNIVERSARY]" atau "10 Oktober") */
   anniversaryDate: string;
+  /** Tanggal hari pertama, format YYYY-MM-DD (dipakai untuk hitung hari bersama) */
+  startDateISO: string;
+  /** Tanggal hari pertama, versi teks */
+  startDateLabel: string;
   /** URL file audio/musik pilihan — gunakan "[URL MUSIK]" atau URL mp3 langsung */
   musicUrl: string;
   /** Judul lagu opsional untuk keterangan kontrol musik */
@@ -42,6 +46,8 @@ export const DEFAULT_LETTER_CONFIG: PersonalLetterConfig = {
   yourName: 'Dimas T. Hidayat',
   relationshipDuration: '1 Tahun Bersama',
   anniversaryDate: '19 Oktober 2025 — 19 Oktober 2026',
+  startDateISO: '2025-10-19',
+  startDateLabel: '19 Oktober 2025',
   musicUrl: '/music/sampai-nanti.mp3',
   musicTitle: 'Kahitna — Sampai Nanti',
   memoryPhoto1Url: memoryPhotoOne,
