@@ -116,14 +116,7 @@ export default function App() {
           scrolled ? 'bg-[#14121A]/70 backdrop-blur-md border-[#F4ECE3]/10' : 'bg-transparent border-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 h-16 sm:h-20 flex items-center justify-between gap-6">
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="font-serif text-sm sm:text-base tracking-[0.32em] uppercase cursor-pointer"
-          >
-            Our Little Universe
-          </button>
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 h-16 sm:h-20 flex items-center justify-end gap-6">
           <button
             type="button"
             onClick={() => scrollToId('cerita')}
