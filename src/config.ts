@@ -1,7 +1,6 @@
-import heroBackdrop from './assets/images/hero_cinema_couple_1791633460891.jpg';
-import memoryPhotoOne from './assets/images/memory_one_coffee_1791633471690.jpg';
-import memoryPhotoTwo from './assets/images/memory_two_walk_1791633482715.jpg';
-import closingPortrait from './assets/images/closing_anniversary_portrait_1791633495631.jpg';
+import memoryPhotoOne from './assets/images/memory-1.jpg';
+import memoryPhotoTwo from './assets/images/memory-2.jpg';
+import closingPortrait from './assets/images/closing.jpg';
 
 export interface PersonalLetterConfig {
   /** Nama pasangan Anda — tampil di bagian pembuka */
@@ -16,8 +15,6 @@ export interface PersonalLetterConfig {
   musicUrl: string;
   /** Judul lagu opsional untuk keterangan kontrol musik */
   musicTitle: string;
-  /** Foto latar belakang Hero Section */
-  heroPhotoUrl: string;
   /** Foto Kenangan 1 di bagian Our Story */
   memoryPhoto1Url: string;
   /** Label/placeholder keterangan Foto Kenangan 1 */
@@ -38,18 +35,15 @@ export interface PersonalLetterConfig {
  * ============================================================================
  * KONFIGURASI PLACEHOLDER PERSONAL — MUDAH DIGANTI
  * ============================================================================
- * Anda dapat mengganti nilai default di bawah ini langsung di kode, atau
- * menggunakan tombol "Personalize Letter" (ikon pena kecil di pojok layar)
- * untuk menyesuaikannya secara langsung di browser.
+ * Ganti nilai di bawah ini langsung di kode. Foto ada di src/assets/images.
  */
 export const DEFAULT_LETTER_CONFIG: PersonalLetterConfig = {
   partnerName: '[NAMA PACAR]',
   yourName: '[NAMA SAYA]',
   relationshipDuration: '[DURASI HUBUNGAN]',
   anniversaryDate: '[TANGGAL ANNIVERSARY]',
-  musicUrl: '[URL MUSIK]',
-  musicTitle: 'Our Song',
-  heroPhotoUrl: heroBackdrop,
+  musicUrl: '/music/sampai-nanti.mp3',
+  musicTitle: 'Kahitna — Sampai Nanti',
   memoryPhoto1Url: memoryPhotoOne,
   memoryPhoto1Placeholder: '[FOTO KENANGAN 1]',
   memoryPhoto2Url: memoryPhotoTwo,

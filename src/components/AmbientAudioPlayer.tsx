@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX, Music, SlidersHorizontal } from 'lucide-react';
+import { Volume2, VolumeX, Music } from 'lucide-react';
 
 interface AmbientAudioPlayerProps {
   musicUrl: string;
   musicTitle?: string;
-  onOpenCustomizer: () => void;
 }
 
 /**
@@ -99,7 +98,6 @@ class IntimateAmbientSynth {
 
 export const AmbientAudioPlayer: React.FC<AmbientAudioPlayerProps> = ({
   musicUrl,
-  onOpenCustomizer,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioError, setAudioError] = useState(false);
@@ -170,18 +168,6 @@ export const AmbientAudioPlayer: React.FC<AmbientAudioPlayerProps> = ({
         />
       )}
 
-      {/* Subtle button to customize placeholders ([NAMA PACAR], [URL MUSIK], etc.) */}
-      <button
-        type="button"
-        onClick={onOpenCustomizer}
-        title="Sesuaikan Placeholder ([NAMA PACAR], [URL MUSIK], Foto, dll.)"
-        aria-label="Sesuaikan Placeholder Personal"
-        className="glass-orbit h-10 px-3.5 rounded-full text-[#B9A3E3] hover:text-[#F7EEE3] hover:border-[#FF8A6B]/50 shadow-[0_10px_30px_-12px_rgba(10,4,24,0.9)] transition-colors duration-200 flex items-center gap-2 text-xs tracking-wider uppercase whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8A6B]/70"
-      >
-        <SlidersHorizontal className="w-3.5 h-3.5 stroke-[1.5]" />
-        <span className="hidden sm:inline">Customize</span>
-      </button>
-
       {/* Minimalist Play/Pause Music Control */}
       <button
         type="button"
@@ -192,20 +178,20 @@ export const AmbientAudioPlayer: React.FC<AmbientAudioPlayerProps> = ({
             ? 'Ambient Melody ([URL MUSIK])'
             : 'Play / Pause Music'
         }
-        className={`glass-orbit h-10 px-4 rounded-full text-[#F7EEE3] hover:border-[#FF8A6B]/50 transition-[color,border-color,box-shadow] duration-200 flex items-center gap-2.5 text-xs tracking-wider uppercase whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF8A6B]/70 ${
+        className={`glass-orbit h-10 px-4 rounded-full text-[#2B2320] hover:border-[#B0634F]/50 transition-[color,border-color,box-shadow] duration-200 flex items-center gap-2.5 text-xs tracking-wider uppercase whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B0634F]/70 ${
           isPlaying
-            ? 'shadow-[0_0_0_1px_rgba(255,138,107,0.35),0_0_24px_-6px_rgba(255,138,107,0.6)]'
-            : 'shadow-[0_10px_30px_-12px_rgba(10,4,24,0.9)]'
+            ? 'shadow-[0_0_0_1px_rgba(60,40,30,0.12),0_0_24px_-6px_rgba(60,40,30,0.12)]'
+            : 'shadow-[0_10px_30px_-12px_rgba(60,40,30,0.25)]'
         }`}
       >
         {isPlaying ? (
-          <Volume2 className="w-3.5 h-3.5 text-[#FF8A6B] stroke-[1.5]" />
+          <Volume2 className="w-3.5 h-3.5 text-[#B0634F] stroke-[1.5]" />
         ) : (
-          <VolumeX className="w-3.5 h-3.5 text-[#B9A3E3]/70 stroke-[1.5]" />
+          <VolumeX className="w-3.5 h-3.5 text-[#7A6C64]/70 stroke-[1.5]" />
         )}
         <span>{isPlaying ? 'Pause' : 'Play'}</span>
-        <span aria-hidden="true" className="text-[#B9A3E3]/45">·</span>
-        <span className="text-[11px] text-[#FFC9A3]/80 font-serif italic normal-case tracking-normal flex items-center gap-1">
+        <span aria-hidden="true" className="text-[#7A6C64]/45">·</span>
+        <span className="text-[11px] text-[#B0634F]/80 font-serif italic normal-case tracking-normal flex items-center gap-1">
           <Music className="w-3 h-3 inline opacity-60" />
           {isPlaceholderUrl ? '[URL MUSIK]' : 'Audio'}
         </span>
