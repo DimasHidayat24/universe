@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX, Music, SlidersHorizontal } from 'lucide-react';
+import { Volume2, VolumeX, Music } from 'lucide-react';
 
 interface AmbientAudioPlayerProps {
   musicUrl: string;
   musicTitle?: string;
-  /** Only shown in edit mode (?edit in the URL) */
-  onOpenCustomizer?: () => void;
 }
 
 /**
@@ -100,7 +98,6 @@ class IntimateAmbientSynth {
 
 export const AmbientAudioPlayer: React.FC<AmbientAudioPlayerProps> = ({
   musicUrl,
-  onOpenCustomizer,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioError, setAudioError] = useState(false);
@@ -169,20 +166,6 @@ export const AmbientAudioPlayer: React.FC<AmbientAudioPlayerProps> = ({
           preload="none"
           onError={() => setAudioError(true)}
         />
-      )}
-
-      {/* Subtle button to customize placeholders ([NAMA PACAR], [URL MUSIK], etc.) */}
-      {onOpenCustomizer && (
-      <button
-        type="button"
-        onClick={onOpenCustomizer}
-        title="Sesuaikan Placeholder ([NAMA PACAR], [URL MUSIK], Foto, dll.)"
-        aria-label="Sesuaikan Placeholder Personal"
-        className="glass-orbit h-10 px-3.5 rounded-full text-[#7A6C64] hover:text-[#2B2320] hover:border-[#B0634F]/50 shadow-[0_10px_30px_-12px_rgba(60,40,30,0.25)] transition-colors duration-200 flex items-center gap-2 text-xs tracking-wider uppercase whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B0634F]/70"
-      >
-        <SlidersHorizontal className="w-3.5 h-3.5 stroke-[1.5]" />
-        <span className="hidden sm:inline">Customize</span>
-      </button>
       )}
 
       {/* Minimalist Play/Pause Music Control */}

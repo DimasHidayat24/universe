@@ -1,17 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'motion/react';
-import { DEFAULT_LETTER_CONFIG, PersonalLetterConfig } from './config';
+import { DEFAULT_LETTER_CONFIG } from './config';
 import { EditorialPhoto } from './components/EditorialPhoto';
 import { AmbientAudioPlayer } from './components/AmbientAudioPlayer';
-import { PersonalizeDrawer } from './components/PersonalizeDrawer';
 import { Reveal } from './components/Reveal';
-
-const STORAGE_KEY = 'our_little_universe_config_v1';
-
-/** The edit button only appears when the URL has ?edit (e.g. /?edit). */
-const isEditMode =
-  typeof window !== 'undefined' &&
-  new URLSearchParams(window.location.search).has('edit');
 
 const Kicker: React.FC<{ n: string; label: string }> = ({ n, label }) => (
   <div className="flex items-center justify-center gap-3 text-[11px] tracking-[0.3em] uppercase text-[#7A6C64]">
@@ -30,36 +22,9 @@ const Ornament: React.FC = () => (
 );
 
 export default function App() {
-  const [config, setConfig] = useState<PersonalLetterConfig>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return { ...DEFAULT_LETTER_CONFIG, ...JSON.parse(saved) };
-    } catch {
-      // Ignore storage errors
-    }
-    return DEFAULT_LETTER_CONFIG;
-  });
+  const config = DEFAULT_LETTER_CONFIG;
 
   const [showOneLastThing, setShowOneLastThing] = useState(false);
-  const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
-
-  const handleSaveConfig = (newConfig: PersonalLetterConfig) => {
-    setConfig(newConfig);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newConfig));
-    } catch {
-      // Ignore storage errors
-    }
-  };
-
-  const handleResetConfig = () => {
-    setConfig(DEFAULT_LETTER_CONFIG);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // Ignore storage errors
-    }
-  };
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, restDelta: 0.001 });
@@ -358,18 +323,8 @@ export default function App() {
       <AmbientAudioPlayer
         musicUrl={config.musicUrl}
         musicTitle={config.musicTitle}
-        onOpenCustomizer={isEditMode ? () => setIsCustomizerOpen(true) : undefined}
       />
 
-      {isEditMode && (
-        <PersonalizeDrawer
-          isOpen={isCustomizerOpen}
-          onClose={() => setIsCustomizerOpen(false)}
-          config={config}
-          onSave={handleSaveConfig}
-          onReset={handleResetConfig}
-        />
-      )}
     </div>
   );
 }
