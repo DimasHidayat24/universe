@@ -7,6 +7,7 @@ import { Reveal } from './components/Reveal';
 import { BoardingPass } from './components/BoardingPass';
 import { PhotoMarquee } from './components/PhotoMarquee';
 import { LetterEnvelope } from './components/LetterEnvelope';
+import { HeartFlight } from './components/HeartFlight';
 import gallery1 from './assets/images/gallery/gallery-1.jpg';
 import gallery2 from './assets/images/gallery/gallery-2.jpg';
 import gallery3 from './assets/images/gallery/gallery-3.jpg';
@@ -46,6 +47,15 @@ const Kicker: React.FC<{ n: string; label: string; className?: string }> = ({ n,
   </div>
 );
 
+function daysUntilAnniversary(iso: string) {
+  const [, m, d] = iso.split('-').map(Number);
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  let next = Date.UTC(now.getFullYear(), m - 1, d);
+  if (next < today) next = Date.UTC(now.getFullYear() + 1, m - 1, d);
+  return Math.round((next - today) / 86400000);
+}
+
 function daysTogether(iso: string) {
   const start = new Date(`${iso}T00:00:00+07:00`).getTime();
   return Math.max(0, Math.floor((Date.now() - start) / 86400000));
@@ -59,6 +69,7 @@ export default function App() {
   const [showOneLastThing, setShowOneLastThing] = useState(false);
   const [activeMsg, setActiveMsg] = useState(0);
   const [days] = useState(() => daysTogether(config.startDateISO));
+  const [anniv] = useState(() => daysUntilAnniversary(config.startDateISO));
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, restDelta: 0.001 });
@@ -142,6 +153,10 @@ export default function App() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#2F5F96]/55 via-[#4A80BC]/25 via-55% to-[#FAF8F2]" aria-hidden="true" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_48%,rgba(47,95,150,0.55),transparent_75%)]" aria-hidden="true" />
 
+          <div className="absolute inset-x-0 top-[7%] h-[34%] pointer-events-none z-[5]">
+            <HeartFlight />
+          </div>
+
           <motion.div
             style={{ y: textY, opacity: textO }}
             className="relative z-10 h-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center"
@@ -153,14 +168,39 @@ export default function App() {
             </Reveal>
             <Reveal delay={0.1}>
               <h1 className="mt-8 font-serif text-[2.6rem] sm:text-6xl lg:text-[5.4rem] leading-[1.04] tracking-[-0.01em] text-balance text-white drop-shadow-[0_2px_24px_rgba(28,60,100,0.55)]">
-                Of all the people in this world, I'm glad it's{' '}
-                <span className="font-italic-serif bg-gradient-to-r from-white to-[#F6D5CB] bg-clip-text text-transparent">you.</span>
+                {"Of all the people in this world, I'm glad it's".split(' ').map((w, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block mr-[0.25em]"
+                    initial={reduce ? false : { opacity: 0, y: 18, filter: 'blur(8px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    transition={{ duration: 0.8, delay: 0.3 + i * 0.09, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {w}
+                  </motion.span>
+                ))}
+                <motion.span
+                  className="inline-block font-italic-serif bg-gradient-to-r from-white to-[#F6D5CB] bg-clip-text text-transparent"
+                  initial={reduce ? false : { opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  transition={{ duration: 1.1, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  you.
+                </motion.span>
               </h1>
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-8 max-w-md mx-auto text-base sm:text-lg leading-relaxed text-white font-normal drop-shadow-[0_1px_12px_rgba(28,60,100,0.6)]">
                 A little place for everything I sometimes find difficult to say.
               </p>
+            </Reveal>
+            <Reveal delay={0.3}>
+              <div className="mt-10 inline-flex items-center gap-3 rounded-full bg-white/20 backdrop-blur-md border border-white/40 px-5 py-2.5 text-[12px] sm:text-[13px] tracking-[0.08em] text-white shadow-[0_10px_30px_-12px_rgba(28,60,100,0.6)]">
+                <span className="h-2 w-2 rounded-full bg-[#F6D5CB] animate-pulse" aria-hidden="true" />
+                <span>Hari ke-{(days + 1).toLocaleString('id-ID')} bersama</span>
+                <span className="text-white/60" aria-hidden="true">·</span>
+                <span>{anniv === 0 ? 'Hari ini anniversary kita ♡' : `${anniv} hari lagi anniversary`}</span>
+              </div>
             </Reveal>
           </motion.div>
 
