@@ -26,7 +26,7 @@ import gallery16 from './assets/images/gallery/gallery-16.jpg';
 import gallery17 from './assets/images/gallery/gallery-17.jpg';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
-import skyHill from './assets/sky/sky-hill.jpg';
+import skyNyc from './assets/sky/sky-nyc.jpg';
 
 const NAV = [
   { id: 'cerita', label: 'Cerita', n: '01' },
@@ -373,7 +373,7 @@ export default function App() {
         {/* ================= 04 HAPPY ANNIVERSARY ================= */}
         <section id="surat" className="relative scroll-mt-20">
           <div className="relative h-[70vh] min-h-[480px] overflow-hidden flex items-center justify-center text-center px-6">
-            <img src={skyHill} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[50%_70%]" />
+            <img src={skyNyc} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[50%_45%]" />
             <img src={cloudWisps} alt="" aria-hidden="true" className="drift-b absolute top-[20%] left-[-10%] w-[120%] opacity-[0.15] mix-blend-screen pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2] via-[#2F5F96]/35 via-50% to-[#FAF8F2]" aria-hidden="true" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,rgba(40,80,130,0.45),transparent_75%)]" aria-hidden="true" />
