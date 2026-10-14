@@ -1,29 +1,31 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   "Hangat & Tenang" — minimalist, elegant, warm.
-   Ivory paper, ink text, one rose-terracotta accent, lots of air.
+   "Langit Siang" — bright daylight sky fading into warm cream.
+   Soft white cards, ink text, sky-blue + soft rose accents, black pill buttons.
+   Fonts unchanged: Libre Caslon Condensed, Instrument Serif italic, Lato.
    ============================================================================ */
 
 @theme {
   --font-serif: "Libre Caslon Condensed", "Instrument Serif", Georgia, serif;
   --font-italic: "Instrument Serif", Georgia, serif;
+  --font-letter: "Pinyon Script", "Great Vibes", cursive;
+  --font-fell: "IM Fell English", Georgia, serif;
   --font-sans: "Lato", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --color-ivory: #FBF7F2;  /* background */
-  --color-linen: #F4ECE3;  /* soft section */
-  --color-ink: #2B2320;    /* text */
-  --color-muted: #7A6C64;  /* secondary text */
-  --color-rose: #B0634F;   /* single warm accent */
-  --color-blush: #EAD6CB;  /* soft accent fill */
-  --color-line: #E5D9CD;   /* hairlines */
+  --color-cream: #FAF8F2;     /* page background */
+  --color-ink: #1C1B19;       /* main text */
+  --color-muted: #6E6A64;     /* secondary text */
+  --color-soft: #8C8780;      /* italic accents */
+  --color-sky: #5B8FC7;       /* blue accent */
+  --color-rose: #D98C7A;      /* warm accent */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: #FBF7F2;
-    color: #2B2320;
+    background-color: #FAF8F2;
+    color: #1C1B19;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -40,22 +42,54 @@
   }
 
   ::selection {
-    background-color: #EAD6CB;
-    color: #2B2320;
+    background-color: rgba(91, 143, 199, 0.22);
+    color: #1C1B19;
   }
 }
 
 @layer components {
-  /* Light paper panel (used by the music pill and the edit drawer) */
+  /* Frosted light panel (music pill) */
   .glass-orbit {
-    background: rgba(251, 247, 242, 0.9);
-    border: 1px solid #E5D9CD;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(28, 27, 25, 0.08);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
   }
 
   .font-italic-serif {
     font-family: var(--font-italic);
     font-style: italic;
   }
+
+  .hairline { border-color: rgba(28, 27, 25, 0.09); }
+
+  /* Slow drifting cloud wisps */
+  .drift-a { animation: drift 70s linear infinite alternate; }
+  .drift-b { animation: drift 95s linear infinite alternate-reverse; }
+  .drift-c { animation: drift 120s linear infinite alternate; }
+}
+
+@keyframes drift {
+  from { transform: translate3d(-6%, 0, 0); }
+  to   { transform: translate3d(6%, 0, 0); }
+}
+
+/* Photo marquee: the track holds two identical halves, so -50% loops seamlessly */
+.marquee-track { animation-timing-function: linear; animation-iteration-count: infinite; will-change: transform; }
+.marquee-left  { animation-name: marquee-left; }
+.marquee-right { animation-name: marquee-right; }
+@keyframes marquee-left  { from { transform: translate3d(0, 0, 0); }    to { transform: translate3d(-50%, 0, 0); } }
+@keyframes marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none !important; }
+}
+
+/* Letter paper: warm parchment with soft vignette and fibre grain */
+.paper {
+  background-color: #FBF5E8;
+  background-image:
+    radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.7), transparent 65%),
+    radial-gradient(ellipse at 0% 0%, rgba(176,138,90,0.14), transparent 45%),
+    radial-gradient(ellipse at 100% 100%, rgba(176,138,90,0.16), transparent 45%),
+    repeating-linear-gradient(0deg, rgba(120,90,50,0.025) 0 1px, transparent 1px 3px);
 }
