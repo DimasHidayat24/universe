@@ -25,6 +25,9 @@ import gallery14 from './assets/images/gallery/gallery-14.jpg';
 import gallery15 from './assets/images/gallery/gallery-15.jpg';
 import gallery16 from './assets/images/gallery/gallery-16.jpg';
 import gallery17 from './assets/images/gallery/gallery-17.jpg';
+import gallery18 from './assets/images/gallery/gallery-18.jpg';
+import gallery19 from './assets/images/gallery/gallery-19.jpg';
+import gallery20 from './assets/images/gallery/gallery-20.jpg';
 import skyDay from './assets/sky/sky-day.jpg';
 import cloudWisps from './assets/sky/cloud-wisps.jpg';
 import skyNyc from './assets/sky/sky-nyc.jpg';
@@ -261,6 +264,7 @@ export default function App() {
                 { src: gallery14, alt: 'Selfie berdua di warung tenda' },
                 { src: gallery16, alt: 'Salsabilla tersenyum di restoran' },
                 { src: gallery13, alt: 'Makan malam berdua di rooftop' },
+                { src: gallery19, alt: 'Salsabilla duduk di samping patung bertopi merah' },
               ]}
               rowB={[
                 { src: gallery6, alt: 'Foto berdua duduk dengan latar tirai merah' },
@@ -271,6 +275,8 @@ export default function App() {
                 { src: gallery12, alt: 'Foto bayi dengan topi merah' },
                 { src: gallery15, alt: 'Salsabilla memeluk boneka beruang' },
                 { src: gallery17, alt: 'Makan bersama teman-teman' },
+                { src: gallery18, alt: 'Dimas berpose di samping patung bertopi merah' },
+                { src: gallery20, alt: 'Salsabilla tersenyum bertopang dagu' },
               ]}
             />
           </div>
