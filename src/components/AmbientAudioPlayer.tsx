@@ -128,6 +128,15 @@ export const AmbientAudioPlayer: React.FC<AmbientAudioPlayerProps> = ({
     }
   }, [musicUrl]);
 
+  // The opening gate asks for the song with a real tap, which phones allow.
+  useEffect(() => {
+    const onPlay = () => {
+      if (!isPlaying) void togglePlay();
+    };
+    window.addEventListener('universe:play', onPlay);
+    return () => window.removeEventListener('universe:play', onPlay);
+  });
+
   const togglePlay = async () => {
     if (isPlaying) {
       if (!isPlaceholderUrl && audioRef.current) {

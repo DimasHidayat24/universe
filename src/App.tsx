@@ -8,6 +8,7 @@ import { BoardingPass } from './components/BoardingPass';
 import { PhotoMarquee } from './components/PhotoMarquee';
 import { LetterEnvelope } from './components/LetterEnvelope';
 import { HeartFlight } from './components/HeartFlight';
+import { OpeningGate } from './components/OpeningGate';
 import gallery1 from './assets/images/gallery/gallery-1.jpg';
 import gallery2 from './assets/images/gallery/gallery-2.jpg';
 import gallery3 from './assets/images/gallery/gallery-3.jpg';
@@ -60,6 +61,12 @@ export default function App() {
   const reduce = useReducedMotion();
   const firstName = config.partnerName.split(' ')[0];
 
+  const [opened, setOpened] = useState(false);
+  const openGate = () => {
+    window.dispatchEvent(new Event('universe:play'));
+    window.scrollTo(0, 0);
+    setOpened(true);
+  };
   const [showOneLastThing, setShowOneLastThing] = useState(false);
   const [activeMsg, setActiveMsg] = useState(0);
   const [days] = useState(() => daysTogether(config.startDateISO));
@@ -147,10 +154,11 @@ export default function App() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_48%,rgba(47,95,150,0.55),transparent_75%)]" aria-hidden="true" />
 
           <div className="absolute inset-x-0 top-[7%] h-[34%] pointer-events-none z-[5]">
-            <HeartFlight />
+            {opened && <HeartFlight />}
           </div>
 
           <motion.div
+            key={opened ? 'hero-on' : 'hero-off'}
             style={{ y: textY, opacity: textO }}
             className="relative z-10 h-full max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center"
           >
@@ -538,6 +546,7 @@ export default function App() {
         />
       </footer>
 
+      <OpeningGate open={opened} name={firstName} onOpen={openGate} />
       <AmbientAudioPlayer musicUrl={config.musicUrl} musicTitle={config.musicTitle} />
     </div>
   );
