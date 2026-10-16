@@ -59,7 +59,7 @@ export const OpeningGate: React.FC<OpeningGateProps> = ({ open, name, onOpen }) 
               initial={reduce ? false : { opacity: 0, y: 16, filter: 'blur(10px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 1.2, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 font-italic-serif text-6xl sm:text-7xl lg:text-8xl leading-none bg-gradient-to-r from-white to-[#F6D5CB] bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(28,60,100,0.45)] pb-2"
+              className="mt-5 max-w-4xl font-italic-serif text-[2.6rem] sm:text-6xl lg:text-7xl leading-[1.05] text-balance bg-gradient-to-r from-white to-[#F6D5CB] bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(28,60,100,0.45)] pb-2"
             >
               {name}
             </motion.h1>

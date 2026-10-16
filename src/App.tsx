@@ -430,7 +430,7 @@ export default function App() {
               <Reveal>
                 <LetterEnvelope to={firstName} initials="D&S">
                   <p className="text-right font-fell italic text-sm sm:text-base text-[#3B2A1E]/70">Malang, 19 Oktober 2026</p>
-                  <p className="mt-10 font-letter text-4xl sm:text-5xl text-[#2A1D14]">My dearest {firstName},</p>
+                  <p className="mt-10 font-letter text-4xl sm:text-5xl text-[#2A1D14]">My dearest {config.partnerName},</p>
                   <div className="mt-8 space-y-6 font-letter text-[1.55rem] sm:text-[1.85rem] leading-[1.55] text-[#2A1D14]/90">
                     <p>Terima kasih sudah menjadi bagian dari perjalanan hidupku.</p>
                     <p>
@@ -546,7 +546,7 @@ export default function App() {
         />
       </footer>
 
-      <OpeningGate open={opened} name={firstName} onOpen={openGate} />
+      <OpeningGate open={opened} name={config.partnerName} onOpen={openGate} />
       <AmbientAudioPlayer musicUrl={config.musicUrl} musicTitle={config.musicTitle} />
     </div>
   );
