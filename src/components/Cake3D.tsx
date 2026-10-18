@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import princessUrl from '../assets/princess.webp';
-import roseClusterUrl from '../assets/rose-cluster.webp';
-import roseSingleUrl from '../assets/rose-single.webp';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -309,37 +307,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
       const l = new THREE.Mesh(leafGeo, leafMat); l.scale.set(1.6, 0.6, 0.35);
       l.position.copy(pos); faceOut(l); l.rotateZ(rot); root.add(l);
     };
-    // Realistic sugar roses: image cutouts (camera-facing) pinned to the tier walls
-    const loadTex = (url: string) => { const t = new THREE.TextureLoader().load(url); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
-    const clusterMat = new THREE.SpriteMaterial({ map: loadTex(roseClusterUrl), alphaTest: 0.3, toneMapped: false });
-    const singleMat = new THREE.SpriteMaterial({ map: loadTex(roseSingleUrl), alphaTest: 0.3, toneMapped: false });
-    const cluster = (ti: number, a: number, y: number, big: number) => {
-      const t = T[ti];
-      const w = 0.62 * big;
-      const sp = new THREE.Sprite(clusterMat);
-      sp.scale.set(w, w / 1.0975, 1);
-      sp.position.copy(onWall(t.r, a, y, 0.14));
-      root.add(sp);
-    };
-    const single = (ti: number, a: number, y: number, size: number) => {
-      const t = T[ti];
-      const sp = new THREE.Sprite(singleMat);
-      sp.scale.set(size * 0.8867, size, 1);
-      sp.position.copy(onWall(t.r, a, y, 0.07));
-      root.add(sp);
-    };
     const front = Math.PI / 2;
-    cluster(2, front - 0.75, T[2].y0 + 0.5, 1.25);
-    cluster(1, front + 0.7, T[1].y0 + 0.55, 1.25);
-    cluster(0, front - 0.45, T[0].y0 + 0.42, 1.4);
-    cluster(2, front + 2.4, T[2].y0 + 0.45, 1.15);
-    cluster(1, front - 2.5, T[1].y0 + 0.5, 1.2);
-    cluster(0, front + 2.8, T[0].y0 + 0.45, 1.3);
-    single(0, front + 1.3, T[0].y0 + 0.5, 0.38);
-    single(2, front + 0.9, T[2].y0 + 0.55, 0.29);
-    single(1, front - 1.2, T[1].y0 + 0.5, 0.32);
-    single(0, front - 2.0, T[0].y0 + 0.45, 0.35);
-    single(1, front + 2.0, T[1].y0 + 0.45, 0.32);
 
     // Macarons leaning on ledges
     const addMacaron = (pos: THREE.Vector3, shell: THREE.Material) => {
