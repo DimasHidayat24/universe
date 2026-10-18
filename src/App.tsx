@@ -9,6 +9,7 @@ import { PhotoMarquee } from './components/PhotoMarquee';
 import { LetterEnvelope } from './components/LetterEnvelope';
 import { HeartFlight } from './components/HeartFlight';
 import { OpeningGate } from './components/OpeningGate';
+import { Cake3D } from './components/Cake3D';
 import gallery1 from './assets/images/gallery/gallery-1.jpg';
 import gallery2 from './assets/images/gallery/gallery-2.jpg';
 import gallery3 from './assets/images/gallery/gallery-3.jpg';
@@ -459,8 +460,14 @@ export default function App() {
               </Reveal>
             </div>
 
-            <Reveal className="mt-20 text-center">
-              <div className="mt-16">
+            <div className="mt-28 sm:mt-36">
+              <Reveal>
+                <Cake3D />
+              </Reveal>
+            </div>
+
+            <Reveal className="mt-12 text-center">
+              <div className="mt-8">
                 <button
                   type="button"
                   onClick={() => setShowOneLastThing((v) => !v)}
