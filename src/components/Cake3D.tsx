@@ -130,8 +130,8 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-    camera.position.set(0, 4.6, 9.6);
-    camera.lookAt(0, 1.85, 0);
+    camera.position.set(0, 3.3, 11.2);
+    camera.lookAt(0, 2.25, 0);
 
     // Lights: soft daylight + warm candle glow
     const hemi = new THREE.HemisphereLight(0xf2f6fb, 0xd9c7b5, 1.15);
@@ -141,7 +141,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
     key.shadow.camera.left = -4; key.shadow.camera.right = 4;
-    key.shadow.camera.top = 5; key.shadow.camera.bottom = -4;
+    key.shadow.camera.top = 6; key.shadow.camera.bottom = -4;
     key.shadow.radius = 6;
     scene.add(key);
     const rim = new THREE.DirectionalLight(0xb9d3f0, 0.8);
@@ -157,40 +157,47 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // Cake stand / plate
-    const plateMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.1 });
-    const plate = new THREE.Mesh(new THREE.CylinderGeometry(2.45, 2.3, 0.12, 96), plateMat);
-    plate.position.y = 0.36;
+    // ---------- Materials ----------
+    const std = (color: number, roughness = 0.45, extra: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
+      new THREE.MeshStandardMaterial({ color, roughness, ...extra });
+    const plateMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.15 });
+    const skyPale = std(0xc3d8ee, 0.55);
+    const blush = std(0xf4c3d0, 0.55);
+    const creamT = std(0xfaf1e2, 0.55);
+    const icing = std(0xfffcf7, 0.32);
+    const dripBlue = std(0xa9c6e6, 0.35);
+    const dripPink = std(0xf2b9c9, 0.35);
+    const roseA = std(0xdf9f97, 0.55);
+    const roseB = std(0xd68b84, 0.55);
+    const gold = std(0xe2c591, 0.3, { metalness: 0.3, emissive: 0x3a2a10, emissiveIntensity: 0.2 });
+    const white = std(0xffffff, 0.3);
+    const skin = std(0xfbe2d4, 0.6);
+    const hairM = std(0xebc777, 0.45);
+    const hairD = std(0xd9ad5c, 0.5);
+    const dark = std(0x4a3226, 0.4);
+    const rand = (() => { let s = 11; return () => ((s = (s * 16807) % 2147483647) / 2147483647); })();
+    const sphere = (r: number, seg = 16) => new THREE.SphereGeometry(r, seg, Math.max(8, Math.round(seg * 0.75)));
+    const onWall = (r: number, a: number, y: number, out = 0) => new THREE.Vector3(Math.cos(a) * (r + out), y, Math.sin(a) * (r + out));
+    const faceOut = (o: THREE.Object3D) => { const p = o.position; o.lookAt(p.x * 3, p.y, p.z * 3); };
+
+    // ---------- Cake stand ----------
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(1.95, 1.9, 0.08, 96), plateMat);
+    plate.position.y = 0.66;
     plate.castShadow = plate.receiveShadow = true;
     root.add(plate);
-    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.8, 0.32, 48), plateMat);
-    stem.position.y = 0.16;
+    const plateRim = new THREE.Mesh(new THREE.TorusGeometry(1.94, 0.045, 12, 96), plateMat);
+    plateRim.rotation.x = Math.PI / 2; plateRim.position.y = 0.67; root.add(plateRim);
+    const stemPts = [[0.9, 0], [0.9, 0.05], [0.55, 0.12], [0.3, 0.28], [0.26, 0.5], [0.45, 0.62]].map(([x, y]) => new THREE.Vector2(x, y));
+    const stem = new THREE.Mesh(new THREE.LatheGeometry(stemPts, 64), plateMat);
     stem.castShadow = true;
     root.add(stem);
 
-    const std = (color: number, roughness = 0.45, extra: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
-      new THREE.MeshStandardMaterial({ color, roughness, ...extra });
-    const skyPale = std(0xbcd4ec, 0.5);
-    const sky = std(0x8fb4dc, 0.45);
-    const blush = std(0xf6c6d4, 0.5);
-    const blushDeep = std(0xeeaabd, 0.45);
-    const creamM = std(0xfffbf5, 0.35);
-    const ivory = std(0xfaf3ea, 0.55);
-    const rose = std(0xd98c7a, 0.4);
-    const gold = std(0xe6c792, 0.28, { metalness: 0.25, emissive: 0x3a2a10, emissiveIntensity: 0.25 });
-    const white = std(0xffffff, 0.3);
-    const skin = std(0xfbe3d6, 0.6);
-    const hairM = std(0xe9c46a, 0.42);
-    const dark = std(0x3a2a24, 0.4);
-    const rand = (() => { let s = 7; return () => ((s = (s * 16807) % 2147483647) / 2147483647); })();
-    const sphere = (r: number, seg = 16) => new THREE.SphereGeometry(r, seg, Math.max(8, seg * 0.75));
-    const onWall = (r: number, a: number, y: number, out = 0) => new THREE.Vector3(Math.cos(a) * (r + out), y, Math.sin(a) * (r + out));
-
-    // Tiers: [radius, bottomY, height, material]
+    // ---------- Tiers ----------
+    const BASE = 0.7;
     const T = [
-      { r: 1.95, y0: 0.42, h: 0.9, m: skyPale },
-      { r: 1.45, y0: 1.32, h: 0.8, m: blush },
-      { r: 1.0, y0: 2.12, h: 0.72, m: ivory },
+      { r: 1.55, y0: BASE, h: 0.95, m: skyPale },
+      { r: 1.27, y0: BASE + 0.95, h: 0.85, m: blush },
+      { r: 1.0, y0: BASE + 1.8, h: 0.88, m: creamT },
     ];
     T.forEach((t) => {
       const mesh = new THREE.Mesh(new THREE.CylinderGeometry(t.r, t.r, t.h, 96), t.m);
@@ -198,336 +205,290 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
       mesh.castShadow = mesh.receiveShadow = true;
       root.add(mesh);
     });
-    const TOP = T[2].y0 + T[2].h; // 2.84
+    const TOP = T[2].y0 + T[2].h;
 
-    // Drips (bottom: white; top: alternating sky / blush)
-    const drips = (r: number, topY: number, mats: THREE.Material[]) => {
-      const cap = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.02, r + 0.02, 0.06, 96), mats[0]);
-      cap.position.y = topY;
-      root.add(cap);
-      const n = Math.round(r * 16);
+    // Rounded frosting lip + thin, irregular drips with a bulb at the end
+    const dripRing = (r: number, topY: number, capMat: THREE.Material, mats: THREE.Material[], maxLen: number) => {
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.015, r + 0.015, 0.05, 96), capMat);
+      cap.position.y = topY - 0.01; root.add(cap);
+      const lip = new THREE.Mesh(new THREE.TorusGeometry(r, 0.04, 10, 96), capMat);
+      lip.rotation.x = Math.PI / 2; lip.position.y = topY - 0.03; root.add(lip);
+      const n = Math.round(r * 24);
       for (let i = 0; i < n; i++) {
-        const a = (i / n) * Math.PI * 2;
-        const len = 0.12 + rand() * 0.28;
-        const m = mats[Math.floor(i / 3) % mats.length];
-        const d = new THREE.Mesh(new THREE.CapsuleGeometry(0.065, len, 4, 10), m);
-        d.position.copy(onWall(r, a, topY - len / 2 - 0.02, 0.015));
-        d.castShadow = true;
+        const a = (i / n) * Math.PI * 2 + rand() * 0.05;
+        const len = 0.06 + Math.pow(rand(), 1.4) * maxLen;
+        const w = 0.032 + rand() * 0.016;
+        const m = mats[Math.floor(rand() * mats.length)];
+        const d = new THREE.Mesh(new THREE.CapsuleGeometry(w, len, 4, 8), m);
+        d.position.copy(onWall(r, a, topY - 0.03 - len / 2, 0.012));
+        d.scale.z = 0.7; faceOut(d);
         root.add(d);
-      }
-      if (mats.length > 1) {
-        // second-colour cap half
-        const cap2 = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.021, r + 0.021, 0.062, 96, 1, false, 0, Math.PI), mats[1]);
-        cap2.position.y = topY;
-        root.add(cap2);
+        const bulb = new THREE.Mesh(sphere(w * 1.1, 10), m);
+        bulb.position.copy(onWall(r, a, topY - 0.03 - len, 0.014));
+        root.add(bulb);
       }
     };
-    drips(T[0].r, T[0].y0 + T[0].h, [creamM]);
-    drips(T[2].r, TOP, [std(0xa9c6e6, 0.35), std(0xf3bccd, 0.35)]);
+    dripRing(T[0].r, T[0].y0 + T[0].h, icing, [icing], 0.38);
+    dripRing(T[2].r, TOP, icing, [dripBlue, dripPink, icing], 0.34);
+    // pink tier: smooth lip only
+    const lip1 = new THREE.Mesh(new THREE.TorusGeometry(T[1].r, 0.035, 10, 96), blush);
+    lip1.rotation.x = Math.PI / 2; lip1.position.y = T[1].y0 + T[1].h - 0.02; root.add(lip1);
 
-    // Pearl rows at each tier base
+    // Pearl borders
     const pearls = (r: number, y: number, m: THREE.Material, size: number) => {
-      const n = Math.round(r * 19);
+      const n = Math.round((Math.PI * 2 * r) / (size * 2.15));
       for (let i = 0; i < n; i++) {
         const p = new THREE.Mesh(sphere(size, 14), m);
-        p.position.copy(onWall(r, (i / n) * Math.PI * 2, y + size * 0.85, 0.02));
+        p.position.copy(onWall(r, (i / n) * Math.PI * 2, y + size * 0.9, 0.01));
         root.add(p);
       }
     };
-    pearls(T[0].r, T[0].y0, white, 0.085);
-    pearls(T[1].r, T[1].y0, gold, 0.055);
-    pearls(T[2].r, T[2].y0, gold, 0.05);
+    pearls(T[0].r, T[0].y0, white, 0.06);
+    pearls(T[1].r, T[1].y0, white, 0.045);
+    pearls(T[2].r, T[2].y0, white, 0.04);
 
-    // Gold ribbon bands
+    // Gold ribbons + bow on the pink tier
     const band = (r: number, y: number, h: number) => {
-      const b = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.012, r + 0.012, h, 96, 1, true), gold);
-      b.position.y = y;
-      root.add(b);
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.01, r + 0.01, h, 96, 1, true), gold);
+      b.position.y = y; root.add(b);
     };
-    band(T[1].r, T[1].y0 + 0.36, 0.13);
-    band(T[2].r, T[2].y0 + 0.12, 0.08);
-
-    // Bow on the pink tier (front)
+    band(T[1].r, T[1].y0 + 0.36, 0.07);
+    band(T[2].r, T[2].y0 + 0.16, 0.06);
     const bow = new THREE.Group();
-    const loopGeo = new THREE.TorusGeometry(0.11, 0.035, 10, 24);
-    const l1 = new THREE.Mesh(loopGeo, gold); l1.scale.set(1.3, 0.75, 0.6); l1.position.x = -0.13; bow.add(l1);
-    const l2 = new THREE.Mesh(loopGeo, gold); l2.scale.set(1.3, 0.75, 0.6); l2.position.x = 0.13; bow.add(l2);
-    const knot = new THREE.Mesh(sphere(0.055), gold); knot.scale.set(1, 0.9, 0.7); bow.add(knot);
+    const loopGeo = new THREE.TorusGeometry(0.075, 0.022, 10, 24);
     [-1, 1].forEach((s) => {
-      const tail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.2, 0.02), gold);
-      tail.position.set(0.05 * s, -0.12, 0); tail.rotation.z = 0.35 * s; bow.add(tail);
+      const l = new THREE.Mesh(loopGeo, gold); l.scale.set(1.4, 0.7, 0.5); l.position.x = 0.1 * s; bow.add(l);
+      const tail = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.13, 0.015), gold);
+      tail.position.set(0.035 * s, -0.08, 0); tail.rotation.z = 0.3 * s; bow.add(tail);
     });
-    bow.position.set(0, T[1].y0 + 0.36, T[1].r + 0.05);
+    const knot = new THREE.Mesh(sphere(0.035), gold); knot.scale.set(1, 0.9, 0.6); bow.add(knot);
+    bow.position.set(0, T[1].y0 + 0.36, T[1].r + 0.03);
     root.add(bow);
 
-    // Sugar roses, white blossoms, macarons
-    const petalGeo = new THREE.SphereGeometry(0.05, 12, 8);
-    const addRose = (pos: THREE.Vector3, s = 1, m: THREE.Material = rose) => {
+    // Big sugar roses (cupped petals spiralling round a bud)
+    const petalGeo = new THREE.SphereGeometry(0.05, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.55);
+    const addRose = (pos: THREE.Vector3, s: number, m: THREE.Material) => {
       const g = new THREE.Group();
-      const core = new THREE.Mesh(sphere(0.032, 12), m); core.scale.set(1, 1, 1.2); core.position.z = 0.03; g.add(core);
-      [[5, 0.035, 0.6, 0.02], [7, 0.062, 0.85, 0.0], [9, 0.088, 1.05, -0.02]].forEach(([n, rad, sc, z], ring) => {
+      const bud = new THREE.Mesh(sphere(0.03, 12), m); bud.scale.set(1, 1, 1.3); bud.position.z = 0.04; g.add(bud);
+      const rings: [number, number, number, number][] = [[4, 0.028, 0.7, 0.035], [6, 0.055, 0.95, 0.02], [8, 0.085, 1.15, 0.0], [10, 0.11, 1.25, -0.02]];
+      rings.forEach(([n, rad, sc, z], ring) => {
         for (let k = 0; k < n; k++) {
-          const a = (k / n) * Math.PI * 2 + ring * 0.4;
+          const a = (k / n) * Math.PI * 2 + ring * 0.5;
           const pt = new THREE.Mesh(petalGeo, m);
-          pt.scale.set(sc, sc * 0.9, sc * 0.35);
+          pt.scale.set(sc, sc, sc * 0.55);
           pt.position.set(Math.cos(a) * rad, Math.sin(a) * rad, z);
-          pt.rotation.set(Math.sin(a) * 0.6, -Math.cos(a) * 0.6, a);
+          pt.rotation.set(-Math.sin(a) * (0.9 + ring * 0.25), Math.cos(a) * (0.9 + ring * 0.25), 0);
+          pt.rotateX(Math.PI / 2);
           g.add(pt);
         }
       });
       g.scale.setScalar(s);
       g.position.copy(pos);
-      g.lookAt(pos.clone().multiplyScalar(2).setY(pos.y));
+      faceOut(g);
+      g.traverse((o) => ((o as THREE.Mesh).castShadow = true));
       root.add(g);
     };
     const addBlossom = (pos: THREE.Vector3, s = 1) => {
       const g = new THREE.Group();
       for (let k = 0; k < 5; k++) {
         const a = (k / 5) * Math.PI * 2;
-        const p = new THREE.Mesh(sphere(0.035 * s, 10), white);
-        p.scale.set(1, 1, 0.45);
-        p.position.set(Math.cos(a) * 0.04 * s, Math.sin(a) * 0.04 * s, 0);
+        const p = new THREE.Mesh(sphere(0.03 * s, 10), white);
+        p.scale.set(1, 1, 0.4);
+        p.position.set(Math.cos(a) * 0.035 * s, Math.sin(a) * 0.035 * s, 0);
         g.add(p);
       }
-      const c = new THREE.Mesh(sphere(0.02 * s, 8), gold); c.position.z = 0.01; g.add(c);
-      g.position.copy(pos);
-      g.lookAt(pos.clone().multiplyScalar(2).setY(pos.y));
-      root.add(g);
+      const c = new THREE.Mesh(sphere(0.016 * s, 8), gold); c.position.z = 0.01; g.add(c);
+      g.position.copy(pos); faceOut(g); root.add(g);
     };
+    const leafGeo = sphere(0.05, 10);
+    const leafMat = std(0xa9bfa0, 0.6);
+    const addLeaf = (pos: THREE.Vector3, rot: number) => {
+      const l = new THREE.Mesh(leafGeo, leafMat); l.scale.set(1.6, 0.6, 0.35);
+      l.position.copy(pos); faceOut(l); l.rotateZ(rot); root.add(l);
+    };
+    const cluster = (ti: number, a: number, y: number, big: number) => {
+      const t = T[ti];
+      addRose(onWall(t.r, a, y, 0.08), big, roseA);
+      addRose(onWall(t.r, a + 0.22, y - 0.14, 0.05), big * 0.7, roseB);
+      addLeaf(onWall(t.r, a - 0.18, y - 0.06, 0.03), 0.6);
+      addLeaf(onWall(t.r, a + 0.3, y + 0.06, 0.03), -0.5);
+      addBlossom(onWall(t.r, a - 0.2, y + 0.12, 0.02), 1.1);
+      addBlossom(onWall(t.r, a + 0.38, y - 0.02, 0.02), 0.9);
+    };
+    const front = Math.PI / 2;
+    cluster(2, front - 0.75, T[2].y0 + 0.5, 1.25);
+    cluster(1, front + 0.7, T[1].y0 + 0.55, 1.25);
+    cluster(0, front - 0.45, T[0].y0 + 0.42, 1.4);
+    cluster(2, front + 2.4, T[2].y0 + 0.45, 1.15);
+    cluster(1, front - 2.5, T[1].y0 + 0.5, 1.2);
+    cluster(0, front + 2.8, T[0].y0 + 0.45, 1.3);
+
+    // Macarons leaning on ledges
     const addMacaron = (pos: THREE.Vector3, shell: THREE.Material) => {
       const g = new THREE.Group();
       [-1, 1].forEach((s) => {
-        const half = new THREE.Mesh(sphere(0.13, 20), shell);
-        half.scale.set(1, 0.42, 1);
-        half.position.y = 0.04 * s;
-        g.add(half);
+        const half = new THREE.Mesh(sphere(0.15, 24), shell);
+        half.scale.set(1, 0.45, 1); half.position.y = 0.045 * s; g.add(half);
       });
-      const fill = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.04, 24), creamM);
-      g.add(fill);
-      g.position.copy(pos);
-      g.lookAt(pos.clone().multiplyScalar(2).setY(pos.y));
-      g.rotateX(Math.PI / 2 - 0.35);
+      const fill = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.135, 0.045, 28), icing); g.add(fill);
+      g.position.copy(pos); faceOut(g); g.rotateX(Math.PI / 2 - 0.25);
       g.traverse((o) => ((o as THREE.Mesh).castShadow = true));
       root.add(g);
     };
+    const macBlue = std(0xa9c6e6, 0.5), macPink = std(0xf2b9c9, 0.5);
+    addMacaron(onWall(T[1].r + 0.1, front - 1.05, T[0].y0 + T[0].h + 0.16), macBlue);
+    addMacaron(onWall(T[1].r + 0.12, front + 1.25, T[0].y0 + T[0].h + 0.16), macPink);
+    addMacaron(onWall(T[2].r + 0.12, front - 1.2, T[1].y0 + T[1].h + 0.16), macPink);
+    addMacaron(onWall(T[2].r + 0.12, front + 1.1, T[1].y0 + T[1].h + 0.16), macBlue);
+    addMacaron(onWall(T[1].r + 0.1, front + 3.4, T[0].y0 + T[0].h + 0.16), macPink);
+    addMacaron(onWall(T[2].r + 0.12, front + 3.6, T[1].y0 + T[1].h + 0.16), macBlue);
 
-    // Diagonal cascade of roses + blossoms (top-right down to bottom-left, front side)
-    const cascade: [number, number, number, number][] = [
-      // [tierIdx, angle, yOffset, size]
-      [2, 0.75, 0.38, 1.0], [2, 0.95, 0.18, 0.8],
-      [1, 1.15, 0.6, 1.15], [1, 1.35, 0.3, 0.9], [1, 1.55, 0.62, 0.75],
-      [0, 1.8, 0.62, 1.25], [0, 2.05, 0.35, 1.0], [0, 2.25, 0.68, 0.8],
-    ];
-    cascade.forEach(([ti, a, yo, s], i) => {
-      const t = T[ti];
-      addRose(onWall(t.r, a, t.y0 + yo, 0.05), s, i % 3 === 1 ? blushDeep : rose);
-      addBlossom(onWall(t.r, a + 0.16, t.y0 + yo + 0.12, 0.02), 1);
-      addBlossom(onWall(t.r, a - 0.12, t.y0 + yo - 0.14, 0.02), 0.85);
-    });
-    // a second smaller cascade on the back so the rotation stays busy
-    [[1, 4.3, 0.45], [0, 4.6, 0.5], [2, 4.0, 0.35]].forEach(([ti, a, yo]) => {
-      const t = T[ti as number];
-      addRose(onWall(t.r, a as number, t.y0 + (yo as number), 0.05), 0.9);
-      addBlossom(onWall(t.r, (a as number) + 0.15, t.y0 + (yo as number) + 0.1, 0.02), 0.9);
-    });
-    // macarons leaning on the ledges
-    const macShells = [blush, skyPale, std(0xf3d9b8, 0.5)];
-    [[0, 0.5], [0, 2.9], [0, 4.0], [0, 5.4], [1, 0.3], [1, 2.6], [1, 3.9], [1, 5.3]].forEach(([ti, a], i) => {
-      const t = T[ti];
-      const ledgeR = (t.r + T[ti + 1].r) / 2 + 0.05;
-      addMacaron(onWall(ledgeR, a, t.y0 + t.h + 0.12), macShells[i % 3]);
-    });
-
-    // Gold sugar pearls + heart / star sprinkles on walls and ledges
+    // A light scatter of gold dragées + tiny hearts
     const heartShape = new THREE.Shape();
     heartShape.moveTo(0, -0.1);
     heartShape.bezierCurveTo(-0.22, 0.05, -0.12, 0.22, 0, 0.12);
     heartShape.bezierCurveTo(0.12, 0.22, 0.22, 0.05, 0, -0.1);
     const heartGeo = new THREE.ExtrudeGeometry(heartShape, { depth: 0.04, bevelEnabled: true, bevelSize: 0.015, bevelThickness: 0.015, bevelSegments: 2 });
     heartGeo.center();
-    const starShape = new THREE.Shape();
-    for (let k = 0; k < 10; k++) {
-      const a = (k / 10) * Math.PI * 2 + Math.PI / 2;
-      const rr = k % 2 === 0 ? 0.1 : 0.045;
-      if (k === 0) starShape.moveTo(Math.cos(a) * rr, Math.sin(a) * rr); else starShape.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
-    }
-    const starGeo = new THREE.ExtrudeGeometry(starShape, { depth: 0.03, bevelEnabled: false });
-    starGeo.center();
-    const sprinkleMats = [rose, sky, gold, blushDeep];
     T.forEach((t, ti) => {
-      const count = [34, 28, 16][ti];
+      const count = [14, 12, 10][ti];
       for (let i = 0; i < count; i++) {
         const a = rand() * Math.PI * 2;
-        const y = t.y0 + 0.15 + rand() * (t.h - 0.35);
-        const kind = rand();
-        let m: THREE.Mesh;
-        if (kind < 0.4) m = new THREE.Mesh(sphere(0.035, 10), gold);
-        else if (kind < 0.7) { m = new THREE.Mesh(heartGeo, sprinkleMats[i % 4]); m.scale.setScalar(0.45); }
-        else { m = new THREE.Mesh(starGeo, i % 2 ? gold : sky); m.scale.setScalar(0.5); }
-        const p = onWall(t.r, a, y, 0.01);
-        m.position.copy(p);
-        m.lookAt(p.clone().multiplyScalar(2).setY(y));
-        root.add(m);
+        const y = t.y0 + 0.18 + rand() * (t.h - 0.45);
+        const m = i % 3 === 0 ? new THREE.Mesh(heartGeo, roseA) : new THREE.Mesh(sphere(0.03, 10), gold);
+        if (i % 3 === 0) m.scale.setScalar(0.38);
+        m.position.copy(onWall(t.r, a, y, 0.01)); faceOut(m); root.add(m);
       }
-      // ledge sprinkles
       if (ti < 2) {
-        const inner = T[ti + 1].r + 0.08, outer = t.r - 0.08;
-        for (let i = 0; i < 26; i++) {
+        const inner = T[ti + 1].r + 0.08, outer = t.r - 0.1;
+        for (let i = 0; i < 12; i++) {
           const a = rand() * Math.PI * 2, rr = inner + rand() * (outer - inner);
-          const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.014, 0.05, 2, 6), sprinkleMats[i % 4]);
-          m.position.set(Math.cos(a) * rr, t.y0 + t.h + 0.04, Math.sin(a) * rr);
-          m.rotation.set(Math.PI / 2, 0, rand() * Math.PI);
-          root.add(m);
+          const m = new THREE.Mesh(sphere(0.028, 10), i % 2 ? gold : white);
+          m.position.set(Math.cos(a) * rr, t.y0 + t.h + 0.02, Math.sin(a) * rr); root.add(m);
         }
       }
     });
-    // Top surface: hearts + sprinkles around the pedestal
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2 + 0.25;
-      const h = new THREE.Mesh(heartGeo, i % 2 ? rose : blushDeep);
-      h.scale.setScalar(0.6);
-      h.position.set(Math.cos(a) * 0.52, TOP + 0.08, Math.sin(a) * 0.52);
-      h.lookAt(Math.cos(a) * 3, TOP + 0.1, Math.sin(a) * 3);
-      root.add(h);
+    for (let i = 0; i < 4; i++) {
+      const a = front + (i - 1.5) * 0.55;
+      const h = new THREE.Mesh(heartGeo, i % 2 ? roseA : dripPink);
+      h.scale.setScalar(0.55);
+      h.position.set(Math.cos(a) * 0.55, TOP + 0.08, Math.sin(a) * 0.55);
+      faceOut(h); root.add(h);
     }
 
-    // ---------- Princess figurine on a pedestal ----------
-    const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.44, 0.1, 48), white);
-    ped.position.y = TOP + 0.05;
-    ped.castShadow = true;
-    root.add(ped);
-    const pedRim = new THREE.Mesh(new THREE.TorusGeometry(0.41, 0.015, 8, 48), gold);
-    pedRim.rotation.x = Math.PI / 2;
-    pedRim.position.y = TOP + 0.1;
-    root.add(pedRim);
+    // ---------- Mini stand + princess ----------
+    const STAND_TOP = TOP + 0.3;
+    const mini = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.48, 0.05, 64), plateMat);
+    mini.position.y = STAND_TOP - 0.025; mini.castShadow = true; root.add(mini);
+    const miniRim = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.025, 8, 64), plateMat);
+    miniRim.rotation.x = Math.PI / 2; miniRim.position.y = STAND_TOP - 0.02; root.add(miniRim);
+    const miniStem = new THREE.Mesh(new THREE.LatheGeometry([[0.25, 0], [0.12, 0.06], [0.07, 0.15], [0.12, 0.25]].map(([x, y]) => new THREE.Vector2(x, y)), 48), plateMat);
+    miniStem.position.y = TOP; root.add(miniStem);
 
     const princess = new THREE.Group();
-    // Gown: three flared ruffle tiers
-    const ruffle = (rTop: number, rBot: number, h: number, y: number, m: THREE.Material) => {
+    const gown1 = std(0xf5c3d1, 0.6);
+    const gown2 = std(0xf9d3dd, 0.6);
+    const ruffle = (rTop: number, rBot: number, h: number, y: number, m: THREE.Material, waves: number) => {
       const pts: THREE.Vector2[] = [];
-      for (let i = 0; i <= 12; i++) {
-        const k = i / 12;
-        pts.push(new THREE.Vector2(rTop + (rBot - rTop) * Math.pow(k, 1.6), h * (1 - k)));
+      for (let i = 0; i <= 14; i++) {
+        const k = i / 14;
+        pts.push(new THREE.Vector2(rTop + (rBot - rTop) * Math.pow(k, 0.8), h * (1 - k)));
       }
-      const g = new THREE.LatheGeometry(pts, 64);
-      // scallop the hem
+      pts.reverse();
+      const g = new THREE.LatheGeometry(pts, 96);
       const pos = g.attributes.position as THREE.BufferAttribute;
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i), z = pos.getZ(i), yy = pos.getY(i);
         const ang = Math.atan2(z, x);
-        const wave = 1 + 0.06 * Math.sin(ang * 14) * (1 - yy / h);
+        const k = 1 - yy / h;
+        const wave = 1 + 0.05 * Math.sin(ang * waves) * k;
         pos.setX(i, x * wave); pos.setZ(i, z * wave);
       }
       g.computeVertexNormals();
       const mesh = new THREE.Mesh(g, m);
-      (mesh.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
       mesh.position.y = y;
-      mesh.castShadow = true;
       princess.add(mesh);
-      const hem = new THREE.Mesh(new THREE.TorusGeometry(rBot * 1.02, 0.014, 6, 64), white);
-      hem.rotation.x = Math.PI / 2;
-      hem.position.y = y + 0.005;
-      princess.add(hem);
     };
-    const gownA = std(0xf6c6d4, 0.55); gownA.side = THREE.DoubleSide;
-    const gownB = std(0xf9d6df, 0.55); gownB.side = THREE.DoubleSide;
-    const skirtCore = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.25, 0.4, 32), gownA);
-    skirtCore.position.y = 0.2;
-    princess.add(skirtCore);
-    ruffle(0.08, 0.3, 0.42, 0.0, gownA);
-    ruffle(0.08, 0.235, 0.3, 0.12, gownB);
-    ruffle(0.075, 0.165, 0.18, 0.24, gownA);
-    // Bodice
-    const bodice = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, 0.13, 24), blushDeep);
-    bodice.position.y = 0.46;
-    princess.add(bodice);
-    for (let i = 0; i < 7; i++) {
-      const p = new THREE.Mesh(sphere(0.008, 6), white);
-      p.position.set(-0.04 + i * 0.013, 0.5 - Math.abs(i - 3) * 0.006, 0.065);
-      princess.add(p);
-    }
-    // Puff sleeves + arms + bouquet
+    const skirt = new THREE.Mesh(new THREE.LatheGeometry([[0.0, 0], [0.27, 0], [0.24, 0.12], [0.16, 0.3], [0.085, 0.44]].map(([x, y]) => new THREE.Vector2(x, y)), 64), gown1);
+    princess.add(skirt);
+    ruffle(0.2, 0.3, 0.14, 0.0, gown2, 18);
+    ruffle(0.15, 0.25, 0.14, 0.13, gown1, 15);
+    ruffle(0.11, 0.2, 0.13, 0.25, gown2, 12);
+    const bodice = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.062, 0.12, 24), gown1);
+    bodice.position.y = 0.5; princess.add(bodice);
+    const neckline = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.008, 6, 24), gown2);
+    neckline.rotation.x = Math.PI / 2; neckline.position.y = 0.555; princess.add(neckline);
     [-1, 1].forEach((s) => {
-      const sl = new THREE.Mesh(sphere(0.042, 14), gownB);
-      sl.position.set(0.075 * s, 0.51, 0);
-      princess.add(sl);
-      const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.016, 0.1, 4, 8), skin);
-      arm.position.set(0.06 * s, 0.45, 0.04);
-      arm.rotation.set(-0.7, 0, 0.55 * s);
-      princess.add(arm);
+      const sl = new THREE.Mesh(sphere(0.036, 14), gown2);
+      sl.position.set(0.062 * s, 0.545, 0); princess.add(sl);
+      const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.013, 0.09, 4, 8), skin);
+      arm.position.set(0.055 * s, 0.49, 0.035); arm.rotation.set(-0.8, 0, 0.5 * s); princess.add(arm);
     });
     const bq = new THREE.Group();
-    [[0, 0], [0.022, 0.01], [-0.022, 0.01], [0.012, -0.018], [-0.012, -0.018]].forEach(([x, y], i) => {
-      const b = new THREE.Mesh(sphere(0.018, 10), i % 2 ? rose : blushDeep);
-      b.position.set(x, y, 0);
-      bq.add(b);
+    [[0, 0], [0.02, 0.01], [-0.02, 0.01], [0.01, -0.017], [-0.012, -0.016], [0, 0.02]].forEach(([x, y], i) => {
+      const b = new THREE.Mesh(sphere(0.016, 10), i % 2 ? roseA : dripPink); b.position.set(x, y, 0); bq.add(b);
     });
-    const leaf = new THREE.Mesh(sphere(0.02, 8), std(0x9bb89a, 0.6)); leaf.scale.set(1.6, 0.5, 0.5); leaf.position.set(0, -0.03, -0.005); bq.add(leaf);
-    bq.position.set(0, 0.41, 0.095);
-    princess.add(bq);
-    // Neck + head
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.04, 12), skin);
-    neck.position.y = 0.545;
-    princess.add(neck);
-    const head = new THREE.Mesh(sphere(0.085, 32), skin);
-    head.position.y = 0.625;
-    princess.add(head);
+    bq.position.set(0, 0.45, 0.08); princess.add(bq);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.019, 0.04, 12), skin);
+    neck.position.y = 0.575; princess.add(neck);
+    const head = new THREE.Mesh(sphere(0.07, 32), skin);
+    head.scale.set(0.95, 1.05, 0.95); head.position.y = 0.65; princess.add(head);
     [-1, 1].forEach((s) => {
-      const eye = new THREE.Mesh(sphere(0.013, 12), dark);
-      eye.scale.set(0.85, 1.15, 0.5);
-      eye.position.set(0.03 * s, 0.628, 0.078);
-      princess.add(eye);
-      const shine = new THREE.Mesh(sphere(0.0045, 6), white);
-      shine.position.set(0.033 * s, 0.633, 0.083);
-      princess.add(shine);
-      const cheek = new THREE.Mesh(sphere(0.012, 10), std(0xf2a7b2, 0.8, { transparent: true, opacity: 0.6 }));
-      cheek.scale.set(1.3, 0.8, 0.3);
-      cheek.position.set(0.048 * s, 0.605, 0.07);
-      princess.add(cheek);
+      const eye = new THREE.Mesh(sphere(0.011, 12), dark);
+      eye.scale.set(0.8, 1.1, 0.45); eye.position.set(0.025 * s, 0.655, 0.064); princess.add(eye);
+      const shine = new THREE.Mesh(sphere(0.0035, 6), white);
+      shine.position.set(0.027 * s, 0.659, 0.069); princess.add(shine);
+      const brow = new THREE.Mesh(new THREE.CapsuleGeometry(0.002, 0.012, 2, 4), hairD);
+      brow.rotation.z = Math.PI / 2 + 0.2 * s; brow.position.set(0.026 * s, 0.676, 0.064); princess.add(brow);
+      const cheek = new THREE.Mesh(sphere(0.01, 10), std(0xf0a3ae, 0.8, { transparent: true, opacity: 0.55 }));
+      cheek.scale.set(1.3, 0.8, 0.3); cheek.position.set(0.04 * s, 0.632, 0.058); princess.add(cheek);
     });
-    const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.009, 0.0025, 4, 12, Math.PI), rose);
-    mouth.rotation.z = Math.PI;
-    mouth.position.set(0, 0.595, 0.083);
-    princess.add(mouth);
-    // Hair: crown cap, fringe, long back, curls
-    const cap = new THREE.Mesh(new THREE.SphereGeometry(0.093, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.52), hairM);
-    cap.position.set(0, 0.632, -0.008);
-    cap.rotation.x = -0.25;
-    princess.add(cap);
-    const back = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.2, 8, 16), hairM);
-    back.scale.set(1.25, 1, 0.55);
-    back.position.set(0, 0.52, -0.05);
-    princess.add(back);
-    [-1, 1].forEach((s) => {
-      for (let k = 0; k < 6; k++) {
-        const c = new THREE.Mesh(sphere(0.03 - k * 0.0015, 12), hairM);
-        c.position.set((0.083 + Math.sin(k * 1.4) * 0.012) * s, 0.63 - k * 0.04, -0.01 - k * 0.004);
+    const lips = new THREE.Mesh(sphere(0.008, 10), std(0xd9707c, 0.5));
+    lips.scale.set(1.3, 0.6, 0.5); lips.position.set(0, 0.618, 0.066); princess.add(lips);
+    // Hair: crown with side part, long wavy locks over the shoulders and down the back
+    const crown = new THREE.Mesh(new THREE.SphereGeometry(0.077, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), hairM);
+    crown.position.set(0, 0.655, -0.006); crown.rotation.set(-0.35, 0, 0.12); princess.add(crown);
+    const fringe = new THREE.Mesh(sphere(0.045, 16), hairM);
+    fringe.scale.set(1.3, 0.55, 0.6); fringe.position.set(-0.02, 0.705, 0.04); fringe.rotation.z = 0.35; princess.add(fringe);
+    const backHair = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.11, 0.3, 32, 8, true, Math.PI * 0.5, Math.PI), hairM);
+    const bp = backHair.geometry.attributes.position as THREE.BufferAttribute;
+    for (let i = 0; i < bp.count; i++) {
+      const y = bp.getY(i); const a = Math.atan2(bp.getZ(i), bp.getX(i));
+      const w = 1 + 0.08 * Math.sin(a * 7 + y * 20);
+      bp.setX(i, bp.getX(i) * w); bp.setZ(i, bp.getZ(i) * w);
+    }
+    backHair.geometry.computeVertexNormals();
+    (backHair.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
+    backHair.position.set(0, 0.52, -0.01); princess.add(backHair);
+    const lock = (s: number, x0: number, z0: number, n: number, m: THREE.Material) => {
+      for (let k = 0; k < n; k++) {
+        const c = new THREE.Mesh(sphere(0.026 - k * 0.0012, 12), m);
+        c.position.set((x0 + Math.sin(k * 1.3) * 0.012 + k * 0.002) * s, 0.65 - k * 0.032, z0 + Math.cos(k * 1.3) * 0.006);
         princess.add(c);
       }
+    };
+    [-1, 1].forEach((s) => {
+      lock(s, 0.068, 0.0, 8, hairM);   // side waves
+      lock(s, 0.06, 0.035, 6, hairD);  // locks falling over the shoulder front
+      lock(s, 0.04, -0.06, 9, hairD);  // back waves
     });
     // Tiara
     const tiara = new THREE.Group();
-    const tRing = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.006, 6, 32, Math.PI), gold);
-    tiara.add(tRing);
-    [-0.6, 0, 0.6].forEach((a, i) => {
-      const spike = new THREE.Mesh(new THREE.ConeGeometry(0.009, i === 1 ? 0.04 : 0.026, 8), gold);
-      spike.position.set(Math.sin(a) * 0.05, Math.cos(a) * 0.05 + 0.012, 0);
-      spike.rotation.z = -a;
-      tiara.add(spike);
+    tiara.add(new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.005, 6, 32, Math.PI), gold));
+    [-0.7, -0.35, 0, 0.35, 0.7].forEach((a, i) => {
+      const spike = new THREE.Mesh(new THREE.ConeGeometry(0.007, i === 2 ? 0.034 : 0.02, 8), gold);
+      spike.position.set(Math.sin(a) * 0.045, Math.cos(a) * 0.045 + 0.01, 0); spike.rotation.z = -a; tiara.add(spike);
     });
-    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.012), std(0xe36d9a, 0.15, { metalness: 0.3 }));
-    gem.position.set(0, 0.052, 0.006);
-    tiara.add(gem);
-    tiara.position.set(0, 0.68, 0.035);
-    tiara.rotation.x = -0.5;
-    princess.add(tiara);
+    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.01), std(0xe36d9a, 0.15, { metalness: 0.3 }));
+    gem.position.set(0, 0.047, 0.005); tiara.add(gem);
+    tiara.position.set(0, 0.7, 0.03); tiara.rotation.x = -0.55; princess.add(tiara);
 
-    princess.scale.setScalar(1.45);
-    princess.position.y = TOP + 0.1;
+    princess.scale.setScalar(1.75);
+    princess.position.y = STAND_TOP;
     princess.traverse((o) => ((o as THREE.Mesh).castShadow = true));
     root.add(princess);
 
-    // Candles
+    // Candles ring around the mini stand
     const glowTex = glowTexture();
     const candleTex = stripeTexture('#fffaf2', '#8fb4dc');
     const candleMat = new THREE.MeshStandardMaterial({ map: candleTex, roughness: 0.45 });
@@ -535,17 +496,17 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
     const candles: Candle[] = [];
     const positions: [number, number][] = Array.from({ length: 5 }, (_, k) => {
       const a = -Math.PI / 2 + (k / 5) * Math.PI * 2;
-      return [Math.cos(a) * 0.8, Math.sin(a) * 0.8];
+      return [Math.cos(a) * 0.78, Math.sin(a) * 0.78];
     });
     positions.forEach(([x, z]) => {
-      const hgt = 0.62;
-      const c = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, hgt, 24), candleMat);
+      const hgt = 0.8;
+      const c = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, hgt, 24), candleMat);
       c.position.set(x, TOP + hgt / 2, z);
       c.castShadow = true;
       root.add(c);
       const topY = TOP + hgt;
-      const wick = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.08, 8), wickMat);
-      wick.position.set(x, topY + 0.04, z);
+      const wick = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.07, 8), wickMat);
+      wick.position.set(x, topY + 0.035, z);
       root.add(wick);
 
       const mat = new THREE.ShaderMaterial({
@@ -557,17 +518,17 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
         blending: THREE.AdditiveBlending,
       });
       const flame = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32).translate(0, 0.5, 0), mat);
-      flame.scale.set(0.15, 0.36, 0.15);
+      flame.scale.set(0.13, 0.32, 0.13);
       flame.position.set(x, topY + 0.03, z);
       root.add(flame);
 
       const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-      glow.scale.set(0.8, 0.8, 1);
-      glow.position.set(x, topY + 0.18, z);
+      glow.scale.set(0.7, 0.7, 1);
+      glow.position.set(x, topY + 0.16, z);
       root.add(glow);
 
-      const light = new THREE.PointLight(0xffb066, 0.5, 3.0, 2);
-      light.position.set(x, topY + 0.22, z);
+      const light = new THREE.PointLight(0xffb066, 0.45, 3.0, 2);
+      light.position.set(x, topY + 0.2, z);
       root.add(light);
 
       candles.push({ flame, mat, glow, light, life: 1, target: 1, tip: new THREE.Vector3(x, topY + 0.1, z) });
@@ -623,7 +584,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
       renderer.setSize(w, h, false);
       el.style.width = '100%'; el.style.height = '100%';
       camera.aspect = w / h;
-      camera.position.z = w < 500 ? 12.2 : 9.6;
+      camera.position.z = w < 500 ? 14 : 11.2;
       camera.updateProjectionMatrix();
     };
     const ro = new ResizeObserver(resize);
@@ -693,7 +654,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
   return (
     <div className="relative mx-auto max-w-2xl text-center">
       <p className="font-italic-serif text-2xl sm:text-3xl text-[#1C1B19]">{title}</p>
-      <div ref={mountRef} className="relative mt-2 h-[440px] sm:h-[540px] w-full cursor-grab active:cursor-grabbing select-none" aria-label="Kue anniversary 3D. Swipe untuk meniup lilin." role="img" />
+      <div ref={mountRef} className="relative mt-2 h-[520px] sm:h-[620px] w-full cursor-grab active:cursor-grabbing select-none" aria-label="Kue anniversary 3D. Swipe untuk meniup lilin." role="img" />
       <div className="min-h-[5.5rem]">
         <AnimatePresence mode="wait">
           {!out ? (
