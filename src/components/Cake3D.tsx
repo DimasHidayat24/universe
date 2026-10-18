@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import princessUrl from '../assets/princess.webp';
+import roseClusterUrl from '../assets/rose-cluster.webp';
+import roseSingleUrl from '../assets/rose-single.webp';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -130,8 +133,8 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-    camera.position.set(0, 4.1, 9.2);
-    camera.lookAt(0, 1.35, 0);
+    camera.position.set(0, 3.3, 11.2);
+    camera.lookAt(0, 2.25, 0);
 
     // Lights: soft daylight + warm candle glow
     const hemi = new THREE.HemisphereLight(0xf2f6fb, 0xd9c7b5, 1.15);
@@ -141,7 +144,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
     key.shadow.camera.left = -4; key.shadow.camera.right = 4;
-    key.shadow.camera.top = 4; key.shadow.camera.bottom = -4;
+    key.shadow.camera.top = 6; key.shadow.camera.bottom = -4;
     key.shadow.radius = 6;
     scene.add(key);
     const rim = new THREE.DirectionalLight(0xb9d3f0, 0.8);
@@ -157,98 +160,279 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // Cake stand / plate
-    const plateMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.1 });
-    const plate = new THREE.Mesh(new THREE.CylinderGeometry(2.35, 2.2, 0.12, 96), plateMat);
-    plate.position.y = 0.36;
+    // ---------- Materials ----------
+    const std = (color: number, roughness = 0.45, extra: Partial<THREE.MeshStandardMaterialParameters> = {}) =>
+      new THREE.MeshStandardMaterial({ color, roughness, ...extra });
+    const plateMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.15 });
+    const skyPale = std(0xc3d8ee, 0.55);
+    const blush = std(0xf4c3d0, 0.55);
+    const creamT = std(0xfaf1e2, 0.55);
+    const icing = std(0xfffcf7, 0.32);
+    const dripBlue = std(0xa9c6e6, 0.35);
+    const dripPink = std(0xf2b9c9, 0.35);
+    const roseA = std(0xdf9f97, 0.55);
+    const roseB = std(0xd68b84, 0.55);
+    const gold = std(0xe2c591, 0.3, { metalness: 0.3, emissive: 0x3a2a10, emissiveIntensity: 0.2 });
+    const white = std(0xffffff, 0.3);
+    const skin = std(0xfbe2d4, 0.6);
+    const hairM = std(0xebc777, 0.45);
+    const hairD = std(0xd9ad5c, 0.5);
+    const dark = std(0x4a3226, 0.4);
+    const rand = (() => { let s = 11; return () => ((s = (s * 16807) % 2147483647) / 2147483647); })();
+    const sphere = (r: number, seg = 16) => new THREE.SphereGeometry(r, seg, Math.max(8, Math.round(seg * 0.75)));
+    const onWall = (r: number, a: number, y: number, out = 0) => new THREE.Vector3(Math.cos(a) * (r + out), y, Math.sin(a) * (r + out));
+    const faceOut = (o: THREE.Object3D) => { const p = o.position; o.lookAt(p.x * 3, p.y, p.z * 3); };
+
+    // ---------- Cake stand ----------
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(1.95, 1.9, 0.08, 96), plateMat);
+    plate.position.y = 0.66;
     plate.castShadow = plate.receiveShadow = true;
     root.add(plate);
-    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.8, 0.32, 48), plateMat);
-    stem.position.y = 0.16;
+    const plateRim = new THREE.Mesh(new THREE.TorusGeometry(1.94, 0.045, 12, 96), plateMat);
+    plateRim.rotation.x = Math.PI / 2; plateRim.position.y = 0.67; root.add(plateRim);
+    const stemPts = [[0.9, 0], [0.9, 0.05], [0.55, 0.12], [0.3, 0.28], [0.26, 0.5], [0.45, 0.62]].map(([x, y]) => new THREE.Vector2(x, y));
+    const stem = new THREE.Mesh(new THREE.LatheGeometry(stemPts, 64), plateMat);
     stem.castShadow = true;
     root.add(stem);
 
-    const sponge = new THREE.MeshStandardMaterial({ color: 0xfaf3ea, roughness: 0.55 });
-    const blue = new THREE.MeshStandardMaterial({ color: 0xbcd4ec, roughness: 0.5 });
-    const cream = new THREE.MeshStandardMaterial({ color: 0xfffbf5, roughness: 0.35 });
-    const rose = new THREE.MeshStandardMaterial({ color: 0xd98c7a, roughness: 0.4 });
+    // ---------- Tiers ----------
+    const BASE = 0.7;
+    const T = [
+      { r: 1.55, y0: BASE, h: 0.95, m: skyPale },
+      { r: 1.27, y0: BASE + 0.95, h: 0.85, m: blush },
+      { r: 1.0, y0: BASE + 1.8, h: 0.88, m: creamT },
+    ];
+    T.forEach((t) => {
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(t.r, t.r, t.h, 96), t.m);
+      mesh.position.y = t.y0 + t.h / 2;
+      mesh.castShadow = mesh.receiveShadow = true;
+      root.add(mesh);
+    });
+    const TOP = T[2].y0 + T[2].h;
 
-    // Bottom tier
-    const t1 = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 1.0, 96), blue);
-    t1.position.y = 0.42 + 0.5;
-    t1.castShadow = t1.receiveShadow = true;
-    root.add(t1);
-    // Top tier
-    const t2 = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.8, 96), sponge);
-    t2.position.y = 1.42 + 0.4;
-    t2.castShadow = t2.receiveShadow = true;
-    root.add(t2);
-
-    // Frosting caps + drips + piped pearls
-    const addTierTrim = (r: number, topY: number, bottomY: number, dripMat: THREE.Material, pearlMat: THREE.Material) => {
-      const cap = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.02, r + 0.02, 0.06, 96), dripMat);
-      cap.position.y = topY;
-      root.add(cap);
-      const n = Math.round(r * 16);
+    // Rounded frosting lip + thin, irregular drips with a bulb at the end
+    const dripRing = (r: number, topY: number, capMat: THREE.Material, mats: THREE.Material[], maxLen: number) => {
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.015, r + 0.015, 0.05, 96), capMat);
+      cap.position.y = topY - 0.01; root.add(cap);
+      const lip = new THREE.Mesh(new THREE.TorusGeometry(r, 0.04, 10, 96), capMat);
+      lip.rotation.x = Math.PI / 2; lip.position.y = topY - 0.03; root.add(lip);
+      const n = Math.round(r * 24);
       for (let i = 0; i < n; i++) {
-        const a = (i / n) * Math.PI * 2;
-        const len = 0.15 + ((Math.sin(i * 12.9898) * 43758.5453) % 1 + 1) % 1 * 0.3;
-        const drip = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, len, 4, 10), dripMat);
-        drip.position.set(Math.cos(a) * (r + 0.015), topY - len / 2 - 0.02, Math.sin(a) * (r + 0.015));
-        drip.castShadow = true;
-        root.add(drip);
-      }
-      // piped pearls around the base
-      const m = Math.round(r * 22);
-      for (let i = 0; i < m; i++) {
-        const a = (i / m) * Math.PI * 2;
-        const pearl = new THREE.Mesh(new THREE.SphereGeometry(0.085, 16, 12), pearlMat);
-        pearl.position.set(Math.cos(a) * (r + 0.02), bottomY + 0.07, Math.sin(a) * (r + 0.02));
-        root.add(pearl);
+        const a = (i / n) * Math.PI * 2 + rand() * 0.05;
+        const len = 0.06 + Math.pow(rand(), 1.4) * maxLen;
+        const w = 0.032 + rand() * 0.016;
+        const m = mats[Math.floor(rand() * mats.length)];
+        const d = new THREE.Mesh(new THREE.CapsuleGeometry(w, len, 4, 8), m);
+        d.position.copy(onWall(r, a, topY - 0.03 - len / 2, 0.012));
+        d.scale.z = 0.7; faceOut(d);
+        root.add(d);
+        const bulb = new THREE.Mesh(sphere(w * 1.1, 10), m);
+        bulb.position.copy(onWall(r, a, topY - 0.03 - len, 0.014));
+        root.add(bulb);
       }
     };
-    addTierTrim(1.8, 1.42, 0.42, cream, cream);
-    addTierTrim(1.2, 2.22, 1.42, cream, rose);
+    dripRing(T[0].r, T[0].y0 + T[0].h, icing, [icing], 0.38);
+    dripRing(T[2].r, TOP, icing, [dripBlue, dripPink, icing], 0.34);
+    // pink tier: smooth lip only
+    const lip1 = new THREE.Mesh(new THREE.TorusGeometry(T[1].r, 0.035, 10, 96), blush);
+    lip1.rotation.x = Math.PI / 2; lip1.position.y = T[1].y0 + T[1].h - 0.02; root.add(lip1);
 
-    // Rose berries + tiny hearts on the bottom tier's top ledge
+    // Pearl borders
+    const pearls = (r: number, y: number, m: THREE.Material, size: number) => {
+      const n = Math.round((Math.PI * 2 * r) / (size * 2.15));
+      for (let i = 0; i < n; i++) {
+        const p = new THREE.Mesh(sphere(size, 14), m);
+        p.position.copy(onWall(r, (i / n) * Math.PI * 2, y + size * 0.9, 0.01));
+        root.add(p);
+      }
+    };
+    pearls(T[0].r, T[0].y0, white, 0.06);
+    pearls(T[1].r, T[1].y0, white, 0.045);
+    pearls(T[2].r, T[2].y0, white, 0.04);
+
+    // Gold ribbons + bow on the pink tier
+    const band = (r: number, y: number, h: number) => {
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.01, r + 0.01, h, 96, 1, true), gold);
+      b.position.y = y; root.add(b);
+    };
+    band(T[1].r, T[1].y0 + 0.36, 0.07);
+    band(T[2].r, T[2].y0 + 0.16, 0.06);
+    const bow = new THREE.Group();
+    const loopGeo = new THREE.TorusGeometry(0.075, 0.022, 10, 24);
+    [-1, 1].forEach((s) => {
+      const l = new THREE.Mesh(loopGeo, gold); l.scale.set(1.4, 0.7, 0.5); l.position.x = 0.1 * s; bow.add(l);
+      const tail = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.13, 0.015), gold);
+      tail.position.set(0.035 * s, -0.08, 0); tail.rotation.z = 0.3 * s; bow.add(tail);
+    });
+    const knot = new THREE.Mesh(sphere(0.035), gold); knot.scale.set(1, 0.9, 0.6); bow.add(knot);
+    bow.position.set(0, T[1].y0 + 0.36, T[1].r + 0.03);
+    root.add(bow);
+
+    // Big sugar roses (cupped petals spiralling round a bud)
+    const petalGeo = new THREE.SphereGeometry(0.05, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.55);
+    const addRose = (pos: THREE.Vector3, s: number, m: THREE.Material) => {
+      const g = new THREE.Group();
+      const bud = new THREE.Mesh(sphere(0.03, 12), m); bud.scale.set(1, 1, 1.3); bud.position.z = 0.04; g.add(bud);
+      const rings: [number, number, number, number][] = [[4, 0.028, 0.7, 0.035], [6, 0.055, 0.95, 0.02], [8, 0.085, 1.15, 0.0], [10, 0.11, 1.25, -0.02]];
+      rings.forEach(([n, rad, sc, z], ring) => {
+        for (let k = 0; k < n; k++) {
+          const a = (k / n) * Math.PI * 2 + ring * 0.5;
+          const pt = new THREE.Mesh(petalGeo, m);
+          pt.scale.set(sc, sc, sc * 0.55);
+          pt.position.set(Math.cos(a) * rad, Math.sin(a) * rad, z);
+          pt.rotation.set(-Math.sin(a) * (0.9 + ring * 0.25), Math.cos(a) * (0.9 + ring * 0.25), 0);
+          pt.rotateX(Math.PI / 2);
+          g.add(pt);
+        }
+      });
+      g.scale.setScalar(s);
+      g.position.copy(pos);
+      faceOut(g);
+      g.traverse((o) => ((o as THREE.Mesh).castShadow = true));
+      root.add(g);
+    };
+    const addBlossom = (pos: THREE.Vector3, s = 1) => {
+      const g = new THREE.Group();
+      for (let k = 0; k < 5; k++) {
+        const a = (k / 5) * Math.PI * 2;
+        const p = new THREE.Mesh(sphere(0.03 * s, 10), white);
+        p.scale.set(1, 1, 0.4);
+        p.position.set(Math.cos(a) * 0.035 * s, Math.sin(a) * 0.035 * s, 0);
+        g.add(p);
+      }
+      const c = new THREE.Mesh(sphere(0.016 * s, 8), gold); c.position.z = 0.01; g.add(c);
+      g.position.copy(pos); faceOut(g); root.add(g);
+    };
+    const leafGeo = sphere(0.05, 10);
+    const leafMat = std(0xa9bfa0, 0.6);
+    const addLeaf = (pos: THREE.Vector3, rot: number) => {
+      const l = new THREE.Mesh(leafGeo, leafMat); l.scale.set(1.6, 0.6, 0.35);
+      l.position.copy(pos); faceOut(l); l.rotateZ(rot); root.add(l);
+    };
+    // Realistic sugar roses: image cutouts (camera-facing) pinned to the tier walls
+    const loadTex = (url: string) => { const t = new THREE.TextureLoader().load(url); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
+    const clusterMat = new THREE.SpriteMaterial({ map: loadTex(roseClusterUrl), alphaTest: 0.3, toneMapped: false });
+    const singleMat = new THREE.SpriteMaterial({ map: loadTex(roseSingleUrl), alphaTest: 0.3, toneMapped: false });
+    const cluster = (ti: number, a: number, y: number, big: number) => {
+      const t = T[ti];
+      const w = 0.62 * big;
+      const sp = new THREE.Sprite(clusterMat);
+      sp.scale.set(w, w / 1.0975, 1);
+      sp.position.copy(onWall(t.r, a, y, 0.14));
+      root.add(sp);
+    };
+    const single = (ti: number, a: number, y: number, size: number) => {
+      const t = T[ti];
+      const sp = new THREE.Sprite(singleMat);
+      sp.scale.set(size * 0.8867, size, 1);
+      sp.position.copy(onWall(t.r, a, y, 0.07));
+      root.add(sp);
+    };
+    const front = Math.PI / 2;
+    cluster(2, front - 0.75, T[2].y0 + 0.5, 1.25);
+    cluster(1, front + 0.7, T[1].y0 + 0.55, 1.25);
+    cluster(0, front - 0.45, T[0].y0 + 0.42, 1.4);
+    cluster(2, front + 2.4, T[2].y0 + 0.45, 1.15);
+    cluster(1, front - 2.5, T[1].y0 + 0.5, 1.2);
+    cluster(0, front + 2.8, T[0].y0 + 0.45, 1.3);
+    single(0, front + 1.3, T[0].y0 + 0.5, 0.38);
+    single(2, front + 0.9, T[2].y0 + 0.55, 0.29);
+    single(1, front - 1.2, T[1].y0 + 0.5, 0.32);
+    single(0, front - 2.0, T[0].y0 + 0.45, 0.35);
+    single(1, front + 2.0, T[1].y0 + 0.45, 0.32);
+
+    // Macarons leaning on ledges
+    const addMacaron = (pos: THREE.Vector3, shell: THREE.Material) => {
+      const g = new THREE.Group();
+      [-1, 1].forEach((s) => {
+        const half = new THREE.Mesh(sphere(0.15, 24), shell);
+        half.scale.set(1, 0.45, 1); half.position.y = 0.045 * s; g.add(half);
+      });
+      const fill = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.135, 0.045, 28), icing); g.add(fill);
+      g.position.copy(pos); faceOut(g); g.rotateX(Math.PI / 2 - 0.25);
+      g.traverse((o) => ((o as THREE.Mesh).castShadow = true));
+      root.add(g);
+    };
+    const macBlue = std(0xa9c6e6, 0.5), macPink = std(0xf2b9c9, 0.5);
+    addMacaron(onWall(T[1].r + 0.1, front - 1.05, T[0].y0 + T[0].h + 0.16), macBlue);
+    addMacaron(onWall(T[1].r + 0.12, front + 1.25, T[0].y0 + T[0].h + 0.16), macPink);
+    addMacaron(onWall(T[2].r + 0.12, front - 1.2, T[1].y0 + T[1].h + 0.16), macPink);
+    addMacaron(onWall(T[2].r + 0.12, front + 1.1, T[1].y0 + T[1].h + 0.16), macBlue);
+    addMacaron(onWall(T[1].r + 0.1, front + 3.4, T[0].y0 + T[0].h + 0.16), macPink);
+    addMacaron(onWall(T[2].r + 0.12, front + 3.6, T[1].y0 + T[1].h + 0.16), macBlue);
+
+    // A light scatter of gold dragées + tiny hearts
     const heartShape = new THREE.Shape();
     heartShape.moveTo(0, -0.1);
     heartShape.bezierCurveTo(-0.22, 0.05, -0.12, 0.22, 0, 0.12);
     heartShape.bezierCurveTo(0.12, 0.22, 0.22, 0.05, 0, -0.1);
-    const heartGeo = new THREE.ExtrudeGeometry(heartShape, { depth: 0.05, bevelEnabled: true, bevelSize: 0.02, bevelThickness: 0.02, bevelSegments: 3 });
+    const heartGeo = new THREE.ExtrudeGeometry(heartShape, { depth: 0.04, bevelEnabled: true, bevelSize: 0.015, bevelThickness: 0.015, bevelSegments: 2 });
     heartGeo.center();
-    for (let i = 0; i < 10; i++) {
-      const a = (i / 10) * Math.PI * 2 + 0.3;
-      if (i % 2 === 0) {
-        const berry = new THREE.Mesh(new THREE.SphereGeometry(0.11, 20, 16), rose);
-        berry.position.set(Math.cos(a) * 1.5, 1.5, Math.sin(a) * 1.5);
-        berry.castShadow = true;
-        root.add(berry);
-      } else {
-        const h = new THREE.Mesh(heartGeo, rose);
-        h.scale.setScalar(1.4);
-        h.position.set(Math.cos(a) * 1.5, 1.58, Math.sin(a) * 1.5);
-        h.lookAt(Math.cos(a) * 4, 1.58, Math.sin(a) * 4);
-        root.add(h);
+    T.forEach((t, ti) => {
+      const count = [14, 12, 10][ti];
+      for (let i = 0; i < count; i++) {
+        const a = rand() * Math.PI * 2;
+        const y = t.y0 + 0.18 + rand() * (t.h - 0.45);
+        const m = i % 3 === 0 ? new THREE.Mesh(heartGeo, roseA) : new THREE.Mesh(sphere(0.03, 10), gold);
+        if (i % 3 === 0) m.scale.setScalar(0.38);
+        m.position.copy(onWall(t.r, a, y, 0.01)); faceOut(m); root.add(m);
       }
+      if (ti < 2) {
+        const inner = T[ti + 1].r + 0.08, outer = t.r - 0.1;
+        for (let i = 0; i < 12; i++) {
+          const a = rand() * Math.PI * 2, rr = inner + rand() * (outer - inner);
+          const m = new THREE.Mesh(sphere(0.028, 10), i % 2 ? gold : white);
+          m.position.set(Math.cos(a) * rr, t.y0 + t.h + 0.02, Math.sin(a) * rr); root.add(m);
+        }
+      }
+    });
+    for (let i = 0; i < 4; i++) {
+      const a = front + (i - 1.5) * 0.55;
+      const h = new THREE.Mesh(heartGeo, i % 2 ? roseA : dripPink);
+      h.scale.setScalar(0.55);
+      h.position.set(Math.cos(a) * 0.55, TOP + 0.08, Math.sin(a) * 0.55);
+      faceOut(h); root.add(h);
     }
 
-    // Candles
+    // ---------- Mini stand + princess (image cutout from the approved concept) ----------
+    const PRINCESS_ASPECT = 0.7111;
+    const STAND_TOP = TOP + 0.3;
+    const mini = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.48, 0.05, 64), plateMat);
+    mini.position.y = STAND_TOP - 0.025; mini.castShadow = true; root.add(mini);
+    const miniRim = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.025, 8, 64), plateMat);
+    miniRim.rotation.x = Math.PI / 2; miniRim.position.y = STAND_TOP - 0.02; root.add(miniRim);
+    const miniStem = new THREE.Mesh(new THREE.LatheGeometry([[0.25, 0], [0.12, 0.06], [0.07, 0.15], [0.12, 0.25]].map(([x, y]) => new THREE.Vector2(x, y)), 48), plateMat);
+    miniStem.position.y = TOP; root.add(miniStem);
+
+    const princessTex = new THREE.TextureLoader().load(princessUrl);
+    princessTex.colorSpace = THREE.SRGBColorSpace;
+    princessTex.anisotropy = 8;
+    const princess = new THREE.Sprite(new THREE.SpriteMaterial({ map: princessTex, alphaTest: 0.35, toneMapped: false }));
+    princess.center.set(0.5, 0.02);
+    const PH = 1.45;
+    princess.scale.set(PH * PRINCESS_ASPECT, PH, 1);
+    princess.position.set(0, STAND_TOP, 0.05);
+    root.add(princess);
+
+    // Candles ring around the mini stand
     const glowTex = glowTexture();
     const candleTex = stripeTexture('#fffaf2', '#8fb4dc');
     const candleMat = new THREE.MeshStandardMaterial({ map: candleTex, roughness: 0.45 });
     const wickMat = new THREE.MeshStandardMaterial({ color: 0x2b2320, roughness: 1 });
     const candles: Candle[] = [];
-    const positions: [number, number][] = [[0, 0], [0.62, 0.3], [-0.62, 0.3], [0.38, -0.55], [-0.38, -0.55]];
-    positions.forEach(([x, z], idx) => {
-      const hgt = idx === 0 ? 1.0 : 0.78;
-      const c = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, hgt, 24), candleMat);
-      c.position.set(x, 2.22 + hgt / 2, z);
+    const positions: [number, number][] = Array.from({ length: 5 }, (_, k) => {
+      const a = -Math.PI / 2 + (k / 5) * Math.PI * 2;
+      return [Math.cos(a) * 0.78, Math.sin(a) * 0.78];
+    });
+    positions.forEach(([x, z]) => {
+      const hgt = 0.8;
+      const c = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, hgt, 24), candleMat);
+      c.position.set(x, TOP + hgt / 2, z);
       c.castShadow = true;
       root.add(c);
-      const topY = 2.22 + hgt;
-      const wick = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.1, 8), wickMat);
-      wick.position.set(x, topY + 0.05, z);
+      const topY = TOP + hgt;
+      const wick = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.07, 8), wickMat);
+      wick.position.set(x, topY + 0.035, z);
       root.add(wick);
 
       const mat = new THREE.ShaderMaterial({
@@ -260,17 +444,17 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
         blending: THREE.AdditiveBlending,
       });
       const flame = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32).translate(0, 0.5, 0), mat);
-      flame.scale.set(0.17, 0.42, 0.17);
-      flame.position.set(x, topY + 0.04, z);
+      flame.scale.set(0.13, 0.32, 0.13);
+      flame.position.set(x, topY + 0.03, z);
       root.add(flame);
 
       const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-      glow.scale.set(0.9, 0.9, 1);
-      glow.position.set(x, topY + 0.2, z);
+      glow.scale.set(0.7, 0.7, 1);
+      glow.position.set(x, topY + 0.16, z);
       root.add(glow);
 
-      const light = new THREE.PointLight(0xffb066, 0.6, 3.5, 2);
-      light.position.set(x, topY + 0.25, z);
+      const light = new THREE.PointLight(0xffb066, 0.45, 3.0, 2);
+      light.position.set(x, topY + 0.2, z);
       root.add(light);
 
       candles.push({ flame, mat, glow, light, life: 1, target: 1, tip: new THREE.Vector3(x, topY + 0.1, z) });
@@ -326,7 +510,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
       renderer.setSize(w, h, false);
       el.style.width = '100%'; el.style.height = '100%';
       camera.aspect = w / h;
-      camera.position.z = w < 500 ? 11 : 8.2;
+      camera.position.z = w < 500 ? 14 : 11.2;
       camera.updateProjectionMatrix();
     };
     const ro = new ResizeObserver(resize);
@@ -396,7 +580,7 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
   return (
     <div className="relative mx-auto max-w-2xl text-center">
       <p className="font-italic-serif text-2xl sm:text-3xl text-[#1C1B19]">{title}</p>
-      <div ref={mountRef} className="relative mt-2 h-[380px] sm:h-[460px] w-full cursor-grab active:cursor-grabbing select-none" aria-label="Kue anniversary 3D. Swipe untuk meniup lilin." role="img" />
+      <div ref={mountRef} className="relative mt-2 h-[520px] sm:h-[620px] w-full cursor-grab active:cursor-grabbing select-none" aria-label="Kue anniversary 3D. Swipe untuk meniup lilin." role="img" />
       <div className="min-h-[5.5rem]">
         <AnimatePresence mode="wait">
           {!out ? (
