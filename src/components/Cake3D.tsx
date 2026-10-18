@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import princessUrl from '../assets/princess.webp';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -376,7 +377,8 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
       faceOut(h); root.add(h);
     }
 
-    // ---------- Mini stand + princess ----------
+    // ---------- Mini stand + princess (image cutout from the approved concept) ----------
+    const PRINCESS_ASPECT = 0.7111;
     const STAND_TOP = TOP + 0.3;
     const mini = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.48, 0.05, 64), plateMat);
     mini.position.y = STAND_TOP - 0.025; mini.castShadow = true; root.add(mini);
@@ -385,107 +387,14 @@ export const Cake3D: React.FC<{ title?: string }> = ({ title = 'Make a wish, say
     const miniStem = new THREE.Mesh(new THREE.LatheGeometry([[0.25, 0], [0.12, 0.06], [0.07, 0.15], [0.12, 0.25]].map(([x, y]) => new THREE.Vector2(x, y)), 48), plateMat);
     miniStem.position.y = TOP; root.add(miniStem);
 
-    const princess = new THREE.Group();
-    const gown1 = std(0xf5c3d1, 0.6);
-    const gown2 = std(0xf9d3dd, 0.6);
-    const ruffle = (rTop: number, rBot: number, h: number, y: number, m: THREE.Material, waves: number) => {
-      const pts: THREE.Vector2[] = [];
-      for (let i = 0; i <= 14; i++) {
-        const k = i / 14;
-        pts.push(new THREE.Vector2(rTop + (rBot - rTop) * Math.pow(k, 0.8), h * (1 - k)));
-      }
-      pts.reverse();
-      const g = new THREE.LatheGeometry(pts, 96);
-      const pos = g.attributes.position as THREE.BufferAttribute;
-      for (let i = 0; i < pos.count; i++) {
-        const x = pos.getX(i), z = pos.getZ(i), yy = pos.getY(i);
-        const ang = Math.atan2(z, x);
-        const k = 1 - yy / h;
-        const wave = 1 + 0.05 * Math.sin(ang * waves) * k;
-        pos.setX(i, x * wave); pos.setZ(i, z * wave);
-      }
-      g.computeVertexNormals();
-      const mesh = new THREE.Mesh(g, m);
-      mesh.position.y = y;
-      princess.add(mesh);
-    };
-    const skirt = new THREE.Mesh(new THREE.LatheGeometry([[0.0, 0], [0.27, 0], [0.24, 0.12], [0.16, 0.3], [0.085, 0.44]].map(([x, y]) => new THREE.Vector2(x, y)), 64), gown1);
-    princess.add(skirt);
-    ruffle(0.2, 0.3, 0.14, 0.0, gown2, 18);
-    ruffle(0.15, 0.25, 0.14, 0.13, gown1, 15);
-    ruffle(0.11, 0.2, 0.13, 0.25, gown2, 12);
-    const bodice = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.062, 0.12, 24), gown1);
-    bodice.position.y = 0.5; princess.add(bodice);
-    const neckline = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.008, 6, 24), gown2);
-    neckline.rotation.x = Math.PI / 2; neckline.position.y = 0.555; princess.add(neckline);
-    [-1, 1].forEach((s) => {
-      const sl = new THREE.Mesh(sphere(0.036, 14), gown2);
-      sl.position.set(0.062 * s, 0.545, 0); princess.add(sl);
-      const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.013, 0.09, 4, 8), skin);
-      arm.position.set(0.055 * s, 0.49, 0.035); arm.rotation.set(-0.8, 0, 0.5 * s); princess.add(arm);
-    });
-    const bq = new THREE.Group();
-    [[0, 0], [0.02, 0.01], [-0.02, 0.01], [0.01, -0.017], [-0.012, -0.016], [0, 0.02]].forEach(([x, y], i) => {
-      const b = new THREE.Mesh(sphere(0.016, 10), i % 2 ? roseA : dripPink); b.position.set(x, y, 0); bq.add(b);
-    });
-    bq.position.set(0, 0.45, 0.08); princess.add(bq);
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.019, 0.04, 12), skin);
-    neck.position.y = 0.575; princess.add(neck);
-    const head = new THREE.Mesh(sphere(0.07, 32), skin);
-    head.scale.set(0.95, 1.05, 0.95); head.position.y = 0.65; princess.add(head);
-    [-1, 1].forEach((s) => {
-      const eye = new THREE.Mesh(sphere(0.011, 12), dark);
-      eye.scale.set(0.8, 1.1, 0.45); eye.position.set(0.025 * s, 0.655, 0.064); princess.add(eye);
-      const shine = new THREE.Mesh(sphere(0.0035, 6), white);
-      shine.position.set(0.027 * s, 0.659, 0.069); princess.add(shine);
-      const brow = new THREE.Mesh(new THREE.CapsuleGeometry(0.002, 0.012, 2, 4), hairD);
-      brow.rotation.z = Math.PI / 2 + 0.2 * s; brow.position.set(0.026 * s, 0.676, 0.064); princess.add(brow);
-      const cheek = new THREE.Mesh(sphere(0.01, 10), std(0xf0a3ae, 0.8, { transparent: true, opacity: 0.55 }));
-      cheek.scale.set(1.3, 0.8, 0.3); cheek.position.set(0.04 * s, 0.632, 0.058); princess.add(cheek);
-    });
-    const lips = new THREE.Mesh(sphere(0.008, 10), std(0xd9707c, 0.5));
-    lips.scale.set(1.3, 0.6, 0.5); lips.position.set(0, 0.618, 0.066); princess.add(lips);
-    // Hair: crown with side part, long wavy locks over the shoulders and down the back
-    const crown = new THREE.Mesh(new THREE.SphereGeometry(0.077, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), hairM);
-    crown.position.set(0, 0.655, -0.006); crown.rotation.set(-0.35, 0, 0.12); princess.add(crown);
-    const fringe = new THREE.Mesh(sphere(0.045, 16), hairM);
-    fringe.scale.set(1.3, 0.55, 0.6); fringe.position.set(-0.02, 0.705, 0.04); fringe.rotation.z = 0.35; princess.add(fringe);
-    const backHair = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.11, 0.3, 32, 8, true, Math.PI * 0.5, Math.PI), hairM);
-    const bp = backHair.geometry.attributes.position as THREE.BufferAttribute;
-    for (let i = 0; i < bp.count; i++) {
-      const y = bp.getY(i); const a = Math.atan2(bp.getZ(i), bp.getX(i));
-      const w = 1 + 0.08 * Math.sin(a * 7 + y * 20);
-      bp.setX(i, bp.getX(i) * w); bp.setZ(i, bp.getZ(i) * w);
-    }
-    backHair.geometry.computeVertexNormals();
-    (backHair.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
-    backHair.position.set(0, 0.52, -0.01); princess.add(backHair);
-    const lock = (s: number, x0: number, z0: number, n: number, m: THREE.Material) => {
-      for (let k = 0; k < n; k++) {
-        const c = new THREE.Mesh(sphere(0.026 - k * 0.0012, 12), m);
-        c.position.set((x0 + Math.sin(k * 1.3) * 0.012 + k * 0.002) * s, 0.65 - k * 0.032, z0 + Math.cos(k * 1.3) * 0.006);
-        princess.add(c);
-      }
-    };
-    [-1, 1].forEach((s) => {
-      lock(s, 0.068, 0.0, 8, hairM);   // side waves
-      lock(s, 0.06, 0.035, 6, hairD);  // locks falling over the shoulder front
-      lock(s, 0.04, -0.06, 9, hairD);  // back waves
-    });
-    // Tiara
-    const tiara = new THREE.Group();
-    tiara.add(new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.005, 6, 32, Math.PI), gold));
-    [-0.7, -0.35, 0, 0.35, 0.7].forEach((a, i) => {
-      const spike = new THREE.Mesh(new THREE.ConeGeometry(0.007, i === 2 ? 0.034 : 0.02, 8), gold);
-      spike.position.set(Math.sin(a) * 0.045, Math.cos(a) * 0.045 + 0.01, 0); spike.rotation.z = -a; tiara.add(spike);
-    });
-    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.01), std(0xe36d9a, 0.15, { metalness: 0.3 }));
-    gem.position.set(0, 0.047, 0.005); tiara.add(gem);
-    tiara.position.set(0, 0.7, 0.03); tiara.rotation.x = -0.55; princess.add(tiara);
-
-    princess.scale.setScalar(1.75);
-    princess.position.y = STAND_TOP;
-    princess.traverse((o) => ((o as THREE.Mesh).castShadow = true));
+    const princessTex = new THREE.TextureLoader().load(princessUrl);
+    princessTex.colorSpace = THREE.SRGBColorSpace;
+    princessTex.anisotropy = 8;
+    const princess = new THREE.Sprite(new THREE.SpriteMaterial({ map: princessTex, alphaTest: 0.35, toneMapped: false }));
+    princess.center.set(0.5, 0.02);
+    const PH = 1.45;
+    princess.scale.set(PH * PRINCESS_ASPECT, PH, 1);
+    princess.position.set(0, STAND_TOP, 0.05);
     root.add(princess);
 
     // Candles ring around the mini stand
